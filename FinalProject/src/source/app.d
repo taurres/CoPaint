@@ -3,7 +3,7 @@
 // Import D standard libraries
 import std.stdio;
 import std.string;
-import SDLApp:SDLApp;
+import sdlApp;
 
 // Load the SDL2 library
 import bindbc.sdl;

@@ -1,4 +1,3 @@
-  module surface1;
   // Import D standard libraries
   import std.stdio;
   import std.string;
@@ -11,6 +10,7 @@
     SDL_Surface* imgSurface;
 
   	this(...) {
+      loadSDL();
   		// Create a surface...
         imgSurface = SDL_CreateRGBSurface(0,640,480,32,0,0,0,0);
   	}
@@ -24,7 +24,7 @@
     }
   	
   	// Update a pixel ...
-  	/// Function for updating the pixels in a surface to a 'blue-ish' color.
+  	// Function for updating the pixels in a surface to a 'blue-ish' color.
     void UpdateSurfacePixel(SDL_Surface* surface, int xPos, int yPos){
         // When we modify pixels, we need to lock the surface first
         SDL_LockSurface(surface);
@@ -55,9 +55,10 @@
         pixelArray[y * imgSurface.pitch + x * imgSurface.format.BytesPerPixel + 1] = g;
         pixelArray[y * imgSurface.pitch + x * imgSurface.format.BytesPerPixel + 0] = b;
     }
+    
 
     /* Fetching pixel's struct and r,g,b value at position (x,y). */
-    SDL_Color PixelAt(int x, int y) {
+    SDL_Color pixelAt(int x, int y) {
         SDL_LockSurface(imgSurface); // Locking surface
         scope(exit){
         SDL_UnlockSurface(imgSurface); // Unlocking surface when done

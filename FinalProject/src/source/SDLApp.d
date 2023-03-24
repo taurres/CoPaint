@@ -1,8 +1,7 @@
 // Import D standard libraries
-module SDLApp;
 import std.stdio;
 import std.string;
-import surface1:Surface;
+import surface;
 
 // Load the SDL2 library
 import bindbc.sdl;
