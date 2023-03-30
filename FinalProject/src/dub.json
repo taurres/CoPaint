@@ -1,0 +1,41 @@
+{
+  "authors": ["Cauviya Selva, Muskaan Nandu, Gopal Krishna, Jiaxi Wen"],
+
+  "copyright": "Copyright © 2023, Cauviya Selva, Muskaan Nandu, Gopal Krishna, Jiaxi Wen",
+
+  "targetType": "executable",
+
+  "targetPath": "bin",
+
+  "dependencies": {
+    "bindbc-sdl": "~>1.2.4"
+  },
+
+  "configurations": [
+    {
+      "name": "executable"
+    },
+
+    {
+      "name": "unittest",
+
+      "preBuildCommands": [
+        "dub run unit-threaded -c gen_ut_main -- -f bin/ut.d -d dub"
+      ],
+
+      "mainSourceFile": "bin/ut.d",
+
+      "excludedSourceFiles": ["source/app.d"],
+
+      "dependencies": {
+        "unit-threaded": "~>2.1.2"
+      }
+    }
+  ],
+
+  "description": "Integrated Code",
+
+  "license": "proprietary",
+
+  "name": "final_project"
+}
