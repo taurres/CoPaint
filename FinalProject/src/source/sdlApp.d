@@ -29,13 +29,13 @@ class SDLApp{
             // Error if SDL cannot be loaded
             if(ret != sdlSupport){
                 writeln("error loading SDL library");
-                
+
                 foreach( info; loader.errors){
                     writeln(info.error,':', info.message);
                 }
             }
             if(ret == SDLSupport.noLibrary){
-                writeln("error no library found");    
+                writeln("error no library found");
             }
             if(ret == SDLSupport.badLibrary){
                 writeln("Eror badLibrary, missing symbols, perhaps an older or very new version of SDL is causing the problem?");
@@ -48,28 +48,28 @@ class SDLApp{
  		}
 
  		~this(){
-            // Quit the SDL Application 
+            // Quit the SDL Application
             SDL_Quit();
 	        writeln("Ending application--good bye!");
  		}
- 		
+
  		// Member variables like 'const SDLSupport ret'
  		// liklely belong here.
  		// global variable for sdl;
 		const SDLSupport ret;
 
- 		void MainApplicationLoop(){ 
+ 		void MainApplicationLoop(){
 			// Create an SDL window
             SDL_Window* window= SDL_CreateWindow("D SDL Painting",
                                         SDL_WINDOWPOS_UNDEFINED,
                                         SDL_WINDOWPOS_UNDEFINED,
                                         640,
-                                        480, 
+                                        480,
                                         SDL_WINDOW_SHOWN);
 
             // Load the bitmap surface
             // SDL_Surface* imgSurface = SDL_CreateRGBSurface(0,640,480,32,0,0,0,0);
-            Surface instance = Surface(1);  
+            Surface instance = Surface(1);
 
             // Accessing imgSurface from surface struct
             SDL_Surface* imgSurface = instance.getSurface();
@@ -125,6 +125,5 @@ class SDLApp{
 
             // Destroy our window
             SDL_DestroyWindow(window);
-		 }				
- 		
+		 }
  	}
