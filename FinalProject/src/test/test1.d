@@ -3,7 +3,7 @@ import std.stdio;
 // Load the SDL2 library
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
-import src.surface;
+import surface;
 
 
 @("Unit Test 1")
