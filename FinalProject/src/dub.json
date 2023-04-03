@@ -18,6 +18,8 @@
 
     {
       "name": "unittest",
+      "importPaths": ["test/", "source/"],
+      "sourcePaths": ["test/", "source/"],
 
       "preBuildCommands": [
         "dub run unit-threaded -c gen_ut_main -- -f bin/ut.d -d dub"
