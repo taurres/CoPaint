@@ -5,13 +5,15 @@ name: CI DLang
 # in this case, the master branch, although you could add others.
 on:
   push:
-    branches: 
+    branches:
       - master
       - dev
     paths:
-      - 'FinalProject/src/**' 
+      - 'FinalProject/src/**'
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
+      - dev
 
 permissions:
   contents: read
@@ -36,12 +38,12 @@ jobs:
       # For us, we need to setup our linux box which only takes a few moments
       - name: Update packages on linux
         run: sudo apt-get update
-      - name: Install sdl2 dependency 
+      - name: Install sdl2 dependency
         run: sudo apt-get install -y libsdl2-dev
-      - name: Install dlang 
+      - name: Install dlang
         run: D_VERSION=$(wget -qO - http://downloads.dlang.org/releases/LATEST) && wget -qO dmd.deb http://downloads.dlang.org/releases/2.x/${D_VERSION}/dmd_${D_VERSION}-0_amd64.deb && sudo apt install -y ./dmd.deb && dmd --version && rm -rf dmd.deb 
       - name: Build and run tests of project code
-        run: cd ./FinalProject/src/ && dub test 
+        run: cd ./FinalProject/src/ && dub test
       # These next two steps need a little bit more explaining, because as we are finding out
       # testing graphics applications is really hard!
       # You learned this when you wrote your GUI applications tests earlier.
@@ -51,7 +53,7 @@ jobs:
       # to install some tools that emulate having an actual desktop window to run our program in.
       # 'xvfb ' is one such tool, and you can see how I have set it up below.
       # - name: Setup configuration for install
-      #  run: echo 31 | cat > input.txt && cat input.txt; 
+      #  run: echo 31 | cat > input.txt && cat input.txt;
         #      - name: Setup headless x11 window
         #        run: sudo apt-get install -q -y --force-yes xvfb xorg xauth openbox  # xorg is needed to set DISPLAY variable later
         #      - name: Run graphical application tests in headless mode
