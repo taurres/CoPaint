@@ -19,6 +19,18 @@
         SDL_FreeSurface(imgSurface);
   	}
 
+    //command object
+    Command command;
+
+    //set command: 
+    void setCommand(Command command){
+      this.command = command;
+    }
+
+    void executeCommand(){
+      command.execute();
+    }
+
     SDL_Surface* getSurface() {
         return imgSurface;
     }

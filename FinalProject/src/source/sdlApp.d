@@ -74,6 +74,12 @@ class SDLApp{
             // Accessing imgSurface from surface struct
             SDL_Surface* imgSurface = instance.getSurface();
 
+            //INITIALIZE COMMANDS
+            
+            Command changePixel = new ChangeSurfacePixelCommand();
+            Command updatePixel = new UpdateSurfacePixelCommand();
+            // set command in a particular case or condition
+
 			// Flag for determing if we are running the main application loop
             bool runApplication = true;
             // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
@@ -107,7 +113,12 @@ class SDLApp{
                         int brushSize=4;
                         for(int w=-brushSize; w < brushSize; w++){
                             for(int h=-brushSize; h < brushSize; h++){
-                                instance.UpdateSurfacePixel(imgSurface,xPos+w,yPos+h);
+                                //set the command
+                                imgSurface.setCommand(updatePixel);
+                                imgSurface.executeCommand();
+
+
+                                //instance.UpdateSurfacePixel(imgSurface,xPos+w,yPos+h);
                             }
                         }
                     }

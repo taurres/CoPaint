@@ -32,8 +32,36 @@ import loader = bindbc.loader.sharedlib;
         // Not sure what to do here
     }
 
+
+
     void execute(){
         surface.changePixel(xPos, yPos, r, g, b);
+    }
+
+  }
+
+
+  //Update pixel class
+
+  class UpdateSurfacePixelCommand : Command {
+    SDL_Surface* surface;
+    int xPos;
+    int yPos;
+
+    this(SDL_Surface* surface, int xPos, int yPos){
+        this.surface = surface;
+        this.xPos = xPos;
+        this.yPos = yPos;
+    }
+
+    ~this(){
+        // Not sure what to do here
+    }
+
+
+
+    void execute(){
+        surface.UpdateSurfacePixel(surface, xPos, yPos);
     }
 
   }
