@@ -58,7 +58,7 @@ class SDLApp{
  		// global variable for sdl;
 		const SDLSupport ret;
 
- 		void MainApplicationLoop(){
+ 		void MainApplicationLoop(){ // Driver code
 			// Create an SDL window
             SDL_Window* window= SDL_CreateWindow("D SDL Painting",
                                         SDL_WINDOWPOS_UNDEFINED,
@@ -127,3 +127,8 @@ class SDLApp{
             SDL_DestroyWindow(window);
 		 }
  	}
+
+// Create Surface
+// Create the commands
+// Set the commands on the controller
+// use controller
