@@ -114,6 +114,7 @@ class SDLApp{
                         for(int w=-brushSize; w < brushSize; w++){
                             for(int h=-brushSize; h < brushSize; h++){
                                 //set the command
+                                updatePixel = new UpdateSurfacePixelCommand();
                                 imgSurface.setCommand(updatePixel);
                                 imgSurface.executeCommand();
 
