@@ -1,13 +1,21 @@
 // Import D standard libraries
 import std.stdio;
 import std.string;
-import surface;
-
+import surface:Surface;
+import command:Command;
+import command:UpdateSurfacePixelCommand;
+import command:ChangeSurfacePixelCommand;
 // Load the SDL2 library
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
 
 class SDLApp{
+
+        // Flag for determing if we are running the main application loop
+        bool runApplication = true;
+        // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
+        //                                                but not yet released)
+        bool drawing = false;
  		this(){
  			// Handle initialization...
  			// SDL_Init
@@ -74,17 +82,6 @@ class SDLApp{
             // Accessing imgSurface from surface struct
             SDL_Surface* imgSurface = instance.getSurface();
 
-            //INITIALIZE COMMANDS
-            
-            Command changePixel = new ChangeSurfacePixelCommand();
-            Command updatePixel = new UpdateSurfacePixelCommand();
-            // set command in a particular case or condition
-
-			// Flag for determing if we are running the main application loop
-            bool runApplication = true;
-            // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
-            //                                                but not yet released)
-            bool drawing = false;
 
             // Main application loop that will run until a quit event has occurred.
             // This is the 'main graphics loop'
@@ -114,11 +111,10 @@ class SDLApp{
                         for(int w=-brushSize; w < brushSize; w++){
                             for(int h=-brushSize; h < brushSize; h++){
                                 //set the command
-                                imgSurface.setCommand(updatePixel);
-                                imgSurface.executeCommand();
-
-
-                                //instance.UpdateSurfacePixel(imgSurface,xPos+w,yPos+h);
+                                Command updatePixel = new UpdateSurfacePixelCommand(&instance,imgSurface,xPos+w,yPos+h);
+                                instance.setCommand(updatePixel);
+                                instance.executeCommand();
+                                // instance.UpdateSurfacePixel(imgSurface,xPos+w,yPos+h);
                             }
                         }
                     }
@@ -139,6 +135,42 @@ class SDLApp{
 		 }
  	}
 
+        //  void drawCommand(Surface instance, SDL_Surface* imgSurface) {
+        //     SDL_Event e;
+        //         // Handle events
+        //         // Events are pushed into an 'event queue' internally in SDL, and then
+        //         // handled one at a time within this loop for as many events have
+        //         // been pushed into the internal SDL queue. Thus, we poll until there
+        //         // are '0' events or a NULL event is returned.
+        //         while(SDL_PollEvent(&e) !=0){
+        //             if(e.type == SDL_QUIT){
+        //                 runApplication= false;
+        //             }
+        //             else if(e.type == SDL_MOUSEBUTTONDOWN){
+        //                 drawing=true;
+        //             }else if(e.type == SDL_MOUSEBUTTONUP){
+        //                 drawing=false;
+        //             }else if(e.type == SDL_MOUSEMOTION && drawing){
+        //                 // retrieve the position
+        //                 int xPos = e.button.x;
+        //                 int yPos = e.button.y;
+        //                 // Loop through and update specific pixels
+        //                 // NOTE: No bounds checking performed --
+        //                 //       think about how you might fix this :)
+        //                 int brushSize=4;
+        //                 for(int w=-brushSize; w < brushSize; w++){
+        //                     for(int h=-brushSize; h < brushSize; h++){
+        //                         //set the command
+        //                         // Command updatePixel = new UpdateSurfacePixelCommand(instance, imgSurface, xPos+w,yPos+h);
+        //                         // instance.setCommand(updatePixel);
+        //                         // instance.executeCommand();
+        //                         instance.UpdateSurfacePixel(imgSurface,xPos+w,yPos+h);
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //  }
+ 	
 // Create Surface
 // Create the commands
 // Set the commands on the controller

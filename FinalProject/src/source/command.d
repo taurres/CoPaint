@@ -11,15 +11,20 @@ import loader = bindbc.loader.sharedlib;
     void execute();
   }
 
+  // DRAW
+  // UNDO
+  // REDO
+  // ERASE
+
   class ChangeSurfacePixelCommand : Command {
-    SDL_Surface* surface;
+    Surface surface;
     int xPos;
     int yPos;
     ubyte r;
     ubyte g;
     ubyte b;
 
-    this(SDL_Surface* surface, int xPos, int yPos, ubyte r, ubyte g, ubyte b){
+    this(Surface surface, int xPos, int yPos, ubyte r, ubyte g, ubyte b){
         this.surface = surface;
         this.xPos = xPos;
         this.yPos = yPos;
@@ -44,12 +49,14 @@ import loader = bindbc.loader.sharedlib;
   //Update pixel class
 
   class UpdateSurfacePixelCommand : Command {
-    SDL_Surface* surface;
+    Surface* surface;
+    SDL_Surface* imgSurface;
     int xPos;
     int yPos;
 
-    this(SDL_Surface* surface, int xPos, int yPos){
+    this(Surface* surface, SDL_Surface* imgSurface, int xPos, int yPos){
         this.surface = surface;
+        this.imgSurface = imgSurface;
         this.xPos = xPos;
         this.yPos = yPos;
     }
@@ -58,10 +65,8 @@ import loader = bindbc.loader.sharedlib;
         // Not sure what to do here
     }
 
-
-
     void execute(){
-        surface.UpdateSurfacePixel(surface, xPos, yPos);
+        surface.UpdateSurfacePixel(imgSurface, xPos, yPos);
     }
 
   }
