@@ -1,4 +1,4 @@
- // Import D standard libraries
+// Import D standard libraries
 import std.stdio;
 import std.string;
 import surface;
@@ -16,28 +16,23 @@ import loader = bindbc.loader.sharedlib;
   // REDO
   // ERASE
 
-  class ChangeSurfacePixelCommand : Command {
+  class EraseCommand : Command {
     Surface surface;
     int xPos;
     int yPos;
-    ubyte r;
+    ubyte r; // assign background color to r,g,b
     ubyte g;
     ubyte b;
 
-    this(Surface surface, int xPos, int yPos, ubyte r, ubyte g, ubyte b){
+    this(Surface surface, int xPos, int yPos){
         this.surface = surface;
         this.xPos = xPos;
         this.yPos = yPos;
-        this.r = r;
-        this.g = g;
-        this.b = b;
     }
 
     ~this(){
         // Not sure what to do here
     }
-
-
 
     void execute(){
         surface.changePixel(xPos, yPos, r, g, b);
@@ -47,8 +42,7 @@ import loader = bindbc.loader.sharedlib;
 
 
   //Update pixel class
-
-  class UpdateSurfacePixelCommand : Command {
+  class DrawCommand : Command {
     Surface* surface;
     SDL_Surface* imgSurface;
     int xPos;
@@ -69,4 +63,18 @@ import loader = bindbc.loader.sharedlib;
         surface.UpdateSurfacePixel(imgSurface, xPos, yPos);
     }
 
+  }
+
+  class UndoCommand : Command {
+    
+    void execute() {
+
+    }
+  }
+
+  class RedoCommand : Command {
+    
+    void execute() {
+
+    }
   }

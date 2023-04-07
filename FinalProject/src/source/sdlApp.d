@@ -3,8 +3,8 @@ import std.stdio;
 import std.string;
 import surface:Surface;
 import command:Command;
-import command:UpdateSurfacePixelCommand;
-import command:ChangeSurfacePixelCommand;
+import command:DrawCommand;
+import command:EraseCommand;
 // Load the SDL2 library
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
@@ -111,7 +111,7 @@ class SDLApp{
                         for(int w=-brushSize; w < brushSize; w++){
                             for(int h=-brushSize; h < brushSize; h++){
                                 //set the command
-                                Command updatePixel = new UpdateSurfacePixelCommand(&instance,imgSurface,xPos+w,yPos+h);
+                                Command updatePixel = new DrawCommand(&instance,imgSurface,xPos+w,yPos+h);
                                 instance.setCommand(updatePixel);
                                 instance.executeCommand();
                                 // instance.UpdateSurfacePixel(imgSurface,xPos+w,yPos+h);
