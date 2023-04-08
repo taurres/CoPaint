@@ -2,6 +2,7 @@
 import std.stdio;
 import std.string;
 import surface;
+import deque;
 
 // Load the SDL2 library
 import bindbc.sdl;
@@ -66,15 +67,17 @@ import loader = bindbc.loader.sharedlib;
   }
 
   class UndoCommand : Command {
-    
+    Deque undo_deque = new Deque();
     void execute() {
-
+      // Pop back from global command deque
+      // Push into redo stack
     }
   }
 
   class RedoCommand : Command {
-    
+    T[] redo_stack;
     void execute() {
-
+      // Pop from redo stack
+      // Push into global command stack
     }
   }
