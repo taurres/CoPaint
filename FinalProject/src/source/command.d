@@ -21,14 +21,16 @@ import loader = bindbc.loader.sharedlib;
     Surface surface;
     int xPos;
     int yPos;
-    ubyte r; // assign background color to r,g,b
-    ubyte g;
-    ubyte b;
+    int brushSize;
+    ubyte r = 0; // assign background color to r,g,b
+    ubyte g = 0;
+    ubyte b = 0;
 
-    this(Surface surface, int xPos, int yPos){
+    this(Surface surface, int xPos, int yPos, int brushSize){
         this.surface = surface;
         this.xPos = xPos;
         this.yPos = yPos;
+        this.brushSize = brushSize;
     }
 
     ~this(){
@@ -48,12 +50,14 @@ import loader = bindbc.loader.sharedlib;
     SDL_Surface* imgSurface;
     int xPos;
     int yPos;
+    int brushSize;
 
-    this(Surface* surface, SDL_Surface* imgSurface, int xPos, int yPos){
+    this(Surface* surface, SDL_Surface* imgSurface, int xPos, int yPos, int brushSize){
         this.surface = surface;
         this.imgSurface = imgSurface;
         this.xPos = xPos;
         this.yPos = yPos;
+        this.brushSize = brushSize;
     }
 
     ~this(){
@@ -61,7 +65,12 @@ import loader = bindbc.loader.sharedlib;
     }
 
     void execute(){
-        surface.UpdateSurfacePixel(imgSurface, xPos, yPos);
+      // Loop through and update specific pixels
+        for(int w=-brushSize; w < brushSize; w++){
+          for(int h=-brushSize; h < brushSize; h++){
+              surface.UpdateSurfacePixel(imgSurface, xPos+w, yPos+h);
+          }
+      }
     }
 
   }

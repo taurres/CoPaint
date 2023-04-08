@@ -125,24 +125,15 @@ class SDLApp{
                         else if (e.key.keysym.sym == SDLK_DOWN){
                             decrease_brush();
                         }
-                    }
+                    } 
                     else if(e.type == SDL_MOUSEMOTION && drawing){
                         // retrieve the position
                         int xPos = e.button.x;
                         int yPos = e.button.y;
-                        // Loop through and update specific pixels
-                        // NOTE: No bounds checking performed --
-                        //       think about how you might fix this :)
-                        brushSize=this.brushSize;
-                        for(int w=-brushSize; w < brushSize; w++){
-                            for(int h=-brushSize; h < brushSize; h++){
-                                //set the command
-                                Command updatePixel = new DrawCommand(&instance,imgSurface,xPos+w,yPos+h);
-                                instance.setCommand(updatePixel);
-                                instance.executeCommand();
-                                // instance.UpdateSurfacePixel(imgSurface,xPos+w,yPos+h);
-                            }
-                        }
+                        //set command
+                        Command updatePixel = new DrawCommand(&instance,imgSurface,xPos,yPos,this.brushSize);
+                        instance.setCommand(updatePixel);
+                        instance.executeCommand();
                     }
                 }
 
