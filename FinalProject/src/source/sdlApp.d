@@ -10,12 +10,6 @@ import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
 
 class SDLApp{
-
-        // Flag for determing if we are running the main application loop
-        bool runApplication = true;
-        // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
-        //                                                but not yet released)
-        bool drawing = false;
  		this(){
  			// Handle initialization...
  			// SDL_Init
@@ -61,6 +55,28 @@ class SDLApp{
 	        writeln("Ending application--good bye!");
  		}
 
+        // Flag for determing if we are running the main application loop
+        bool runApplication = true;
+        // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
+        //                                                but not yet released)
+        bool drawing = false;
+
+        int brushSize = 1;
+
+        //change these to get inputs from GUI button clicks later
+        void increase_brush(){
+            if (brushSize <= 50){
+                brushSize = brushSize + 1;
+            }
+
+        }
+
+        void decrease_brush(){
+            if (brushSize > 1){
+                brushSize = brushSize - 1;
+            }
+        }
+
  		// Member variables like 'const SDLSupport ret'
  		// liklely belong here.
  		// global variable for sdl;
@@ -100,14 +116,24 @@ class SDLApp{
                         drawing=true;
                     }else if(e.type == SDL_MOUSEBUTTONUP){
                         drawing=false;
-                    }else if(e.type == SDL_MOUSEMOTION && drawing){
+                    }
+                    //BRUSHSIZE
+                    else if(e.type == SDL_KEYDOWN){
+                        if (e.key.keysym.sym == SDLK_UP){
+                            increase_brush();
+                        }
+                        else if (e.key.keysym.sym == SDLK_DOWN){
+                            decrease_brush();
+                        }
+                    }
+                    else if(e.type == SDL_MOUSEMOTION && drawing){
                         // retrieve the position
                         int xPos = e.button.x;
                         int yPos = e.button.y;
                         // Loop through and update specific pixels
                         // NOTE: No bounds checking performed --
                         //       think about how you might fix this :)
-                        int brushSize=4;
+                        brushSize=this.brushSize;
                         for(int w=-brushSize; w < brushSize; w++){
                             for(int h=-brushSize; h < brushSize; h++){
                                 //set the command

@@ -67,7 +67,7 @@ import loader = bindbc.loader.sharedlib;
   }
 
   class UndoCommand : Command {
-    Deque undo_deque = new Deque();
+    // Deque undo_deque = new Deque();
     void execute() {
       // Pop back from global command deque
       // Push into redo stack
@@ -75,7 +75,7 @@ import loader = bindbc.loader.sharedlib;
   }
 
   class RedoCommand : Command {
-    T[] redo_stack;
+    // T[] redo_stack;
     void execute() {
       // Pop from redo stack
       // Push into global command stack

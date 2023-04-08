@@ -29,12 +29,10 @@
 
     //set command: 
     void setCommand(Command command){
-      writeln("set command works");
       this.command = command;
     }
 
     void executeCommand(){
-      writeln("execute command works");
       command.execute();
     }
 
