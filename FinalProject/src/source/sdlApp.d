@@ -53,7 +53,6 @@ class SDLApp{
 	        writeln("Ending application--good bye!");
  		}
 
-<<<<<<< HEAD
         // Flag for determing if we are running the main application loop
         bool runApplication = true;
         // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
@@ -62,21 +61,11 @@ class SDLApp{
 
         int brushSize = 1;
 
-=======
-        //brush size functions:
-        int brushSize = 1;
-        
->>>>>>> 25f7c19e5e3618a80a9008210eeb5bcf440ce16e
         //change these to get inputs from GUI button clicks later
         void increase_brush(){
             if (brushSize <= 50){
                 brushSize = brushSize + 1;
             }
-<<<<<<< HEAD
-
-=======
-            
->>>>>>> 25f7c19e5e3618a80a9008210eeb5bcf440ce16e
         }
 
         void decrease_brush(){
@@ -129,10 +118,6 @@ class SDLApp{
                         drawing=true;
                     }else if(e.type == SDL_MOUSEBUTTONUP){
                         drawing=false;
-<<<<<<< HEAD
-=======
-
->>>>>>> 25f7c19e5e3618a80a9008210eeb5bcf440ce16e
                     }
                     //BRUSHSIZE
                     else if(e.type == SDL_KEYDOWN){
@@ -142,32 +127,15 @@ class SDLApp{
                         else if (e.key.keysym.sym == SDLK_DOWN){
                             decrease_brush();
                         }
-<<<<<<< HEAD
                     } 
-=======
-                    }
-                    
->>>>>>> 25f7c19e5e3618a80a9008210eeb5bcf440ce16e
                     else if(e.type == SDL_MOUSEMOTION && drawing){
                         // retrieve the position
                         int xPos = e.button.x;
                         int yPos = e.button.y;
-<<<<<<< HEAD
                         //set command
                         Command updatePixel = new DrawCommand(&instance,imgSurface,xPos,yPos,this.brushSize);
                         instance.setCommand(updatePixel);
                         instance.executeCommand();
-=======
-                        // Loop through and update specific pixels
-                        // NOTE: No bounds checking performed --
-                        //       think about how you might fix this :)
-                        brushSize=this.brushSize;
-                        for(int w=-brushSize; w < brushSize; w++){
-                            for(int h=-brushSize; h < brushSize; h++){
-                                instance.UpdateSurfacePixel(imgSurface,xPos+w,yPos+h);
-                            }
-                        }
->>>>>>> 25f7c19e5e3618a80a9008210eeb5bcf440ce16e
                     }
                 }
 
