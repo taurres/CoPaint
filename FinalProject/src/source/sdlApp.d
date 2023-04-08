@@ -1,21 +1,13 @@
 // Import D standard libraries
 import std.stdio;
 import std.string;
-import surface:Surface;
-import command:Command;
-import command:DrawCommand;
-import command:EraseCommand;
+import surface;
+
 // Load the SDL2 library
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
 
 class SDLApp{
-
-        // Flag for determing if we are running the main application loop
-        bool runApplication = true;
-        // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
-        //                                                but not yet released)
-        bool drawing = false;
  		this(){
  			// Handle initialization...
  			// SDL_Init
@@ -61,12 +53,29 @@ class SDLApp{
 	        writeln("Ending application--good bye!");
  		}
 
+        //brush size functions:
+        int brushSize = 1;
+        
+        //change these to get inputs from GUI button clicks later
+        void increase_brush(){
+            if (brushSize <= 50){
+                brushSize = brushSize + 1;
+            }
+            
+        }
+
+        void decrease_brush(){
+            if (brushSize > 1){
+                brushSize = brushSize - 1;
+            }
+        }
+
  		// Member variables like 'const SDLSupport ret'
  		// liklely belong here.
  		// global variable for sdl;
 		const SDLSupport ret;
 
- 		void MainApplicationLoop(){ // Driver code
+ 		void MainApplicationLoop(){
 			// Create an SDL window
             SDL_Window* window= SDL_CreateWindow("D SDL Painting",
                                         SDL_WINDOWPOS_UNDEFINED,
@@ -82,6 +91,11 @@ class SDLApp{
             // Accessing imgSurface from surface struct
             SDL_Surface* imgSurface = instance.getSurface();
 
+			// Flag for determing if we are running the main application loop
+            bool runApplication = true;
+            // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
+            //                                                but not yet released)
+            bool drawing = false;
 
             // Main application loop that will run until a quit event has occurred.
             // This is the 'main graphics loop'
@@ -100,21 +114,29 @@ class SDLApp{
                         drawing=true;
                     }else if(e.type == SDL_MOUSEBUTTONUP){
                         drawing=false;
-                    }else if(e.type == SDL_MOUSEMOTION && drawing){
+
+                    }
+                    //BRUSHSIZE
+                    else if(e.type == SDL_KEYDOWN){
+                        if (e.key.keysym.sym == SDLK_UP){
+                            increase_brush();
+                        }
+                        else if (e.key.keysym.sym == SDLK_DOWN){
+                            decrease_brush();
+                        }
+                    }
+                    
+                    else if(e.type == SDL_MOUSEMOTION && drawing){
                         // retrieve the position
                         int xPos = e.button.x;
                         int yPos = e.button.y;
                         // Loop through and update specific pixels
                         // NOTE: No bounds checking performed --
                         //       think about how you might fix this :)
-                        int brushSize=4;
+                        brushSize=this.brushSize;
                         for(int w=-brushSize; w < brushSize; w++){
                             for(int h=-brushSize; h < brushSize; h++){
-                                //set the command
-                                Command updatePixel = new DrawCommand(&instance,imgSurface,xPos+w,yPos+h);
-                                instance.setCommand(updatePixel);
-                                instance.executeCommand();
-                                // instance.UpdateSurfacePixel(imgSurface,xPos+w,yPos+h);
+                                instance.UpdateSurfacePixel(imgSurface,xPos+w,yPos+h);
                             }
                         }
                     }
@@ -134,44 +156,3 @@ class SDLApp{
             SDL_DestroyWindow(window);
 		 }
  	}
-
-        //  void drawCommand(Surface instance, SDL_Surface* imgSurface) {
-        //     SDL_Event e;
-        //         // Handle events
-        //         // Events are pushed into an 'event queue' internally in SDL, and then
-        //         // handled one at a time within this loop for as many events have
-        //         // been pushed into the internal SDL queue. Thus, we poll until there
-        //         // are '0' events or a NULL event is returned.
-        //         while(SDL_PollEvent(&e) !=0){
-        //             if(e.type == SDL_QUIT){
-        //                 runApplication= false;
-        //             }
-        //             else if(e.type == SDL_MOUSEBUTTONDOWN){
-        //                 drawing=true;
-        //             }else if(e.type == SDL_MOUSEBUTTONUP){
-        //                 drawing=false;
-        //             }else if(e.type == SDL_MOUSEMOTION && drawing){
-        //                 // retrieve the position
-        //                 int xPos = e.button.x;
-        //                 int yPos = e.button.y;
-        //                 // Loop through and update specific pixels
-        //                 // NOTE: No bounds checking performed --
-        //                 //       think about how you might fix this :)
-        //                 int brushSize=4;
-        //                 for(int w=-brushSize; w < brushSize; w++){
-        //                     for(int h=-brushSize; h < brushSize; h++){
-        //                         //set the command
-        //                         // Command updatePixel = new UpdateSurfacePixelCommand(instance, imgSurface, xPos+w,yPos+h);
-        //                         // instance.setCommand(updatePixel);
-        //                         // instance.executeCommand();
-        //                         instance.UpdateSurfacePixel(imgSurface,xPos+w,yPos+h);
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //  }
- 	
-// Create Surface
-// Create the commands
-// Set the commands on the controller
-// use controller
