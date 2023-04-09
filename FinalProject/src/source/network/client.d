@@ -1,6 +1,7 @@
 // @file client.d
 import std.stdio;
 import std.socket;
+import core.thread.osthread;
 
 void main() {
     writeln("Starting client... ");
@@ -15,12 +16,20 @@ void main() {
     writeln(cast(char[])(buffer[0 .. socket.receive(buffer)]));
     write("> ");
 
-    foreach(line; stdin.byLine) {
-        socket.send(line);
+    new Thread({
+                while(true) {
+                    auto serverReply = buffer[0 .. socket.receive(buffer)];
 
-        auto serverReply = buffer[0 .. socket.receive(buffer)];
-        writeln("\n> Server : ", cast(char[])(serverReply.dup));
+                    if(serverReply.length > 0) {
+                        writeln("\nServer > ", cast(char[])(serverReply.dup));
+                    }
+                }
+            }).start();
 
-        write(">");
+    while(true) {
+        foreach(line; stdin.byLine) {
+            write("> ");
+            socket.send(line);
+        }
     }
 }

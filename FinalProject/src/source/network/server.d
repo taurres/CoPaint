@@ -31,13 +31,20 @@ void main() {
         }
 
         if(Socket.select(clientReadSet, null, null)) {
-            foreach(Socket readClient ; connectedClientList) {
+            foreach(i, Socket readClient ; connectedClientList) {
                 if(clientReadSet.isSet(readClient)) {
                     auto clientMessage = buffer[0 .. readClient.receive(buffer)];
 
-                    foreach(Socket writeClient ; connectedClientList) {
-                        writeClient.send(cast(char[])dup(cast(const(byte)[])clientMessage));
-                        writeln(cast(char[])clientMessage.dup);
+                    if(clientMessage.length > 0) {
+                        writeln("> client ", i + 1, " sent an update...");
+
+                        foreach(j, Socket writeClient ; connectedClientList) {
+                            if (i != j) {
+                                writeClient.send(cast(char[])dup(cast(const(byte)[])clientMessage)); //TODO: understand/simplify this line
+                            }
+                        }
+
+                        writeln("... all clients synced");
                     }
                 }
             }
