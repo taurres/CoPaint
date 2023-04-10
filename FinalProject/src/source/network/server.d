@@ -23,6 +23,7 @@ void main() {
     bool serverOnline = true;
 
     while(serverOnline) {
+        // writeln("\nDebug: another loop");
         clientReadSet.reset();
         clientReadSet.add(listener);
 
@@ -30,16 +31,29 @@ void main() {
             clientReadSet.add(client);
         }
 
-        if(Socket.select(clientReadSet, null, null)) {
+        if(auto updatedCount = Socket.select(clientReadSet, null, null)) {
+            // writeln("Debug: select cilentReadSet returned true: ", updatedCount);
             foreach(i, Socket readClient ; connectedClientList) {
+                // writeln("Debug: checking client ", readClient.toHash());
                 if(clientReadSet.isSet(readClient)) {
-                    auto clientMessage = buffer[0 .. readClient.receive(buffer)];
+                    // writeln("Debug: client", readClient.toHash(), "has status change");
+                    long receiveLength = readClient.receive(buffer);
+                    // writeln("Debug: receive message length: ", receiveLength);
+                    auto clientMessage = buffer[0 .. receiveLength];
+                    // writeln("Debug: client message: ", clientMessage);
 
-                    if(clientMessage.length > 0) {
-                        writeln("> client ", i + 1, " sent an update...");
+                    if(clientMessage.length == 0) {
+                        writeln("> client ", readClient.toHash(), " disconnected...");
+                        readClient.close();
+                        connectedClientList = connectedClientList[0 .. i] ~ connectedClientList[i + 1 .. $];
+                        writeln("... client ", readClient.toHash(), " removed from the client list");
+
+                    } else if(clientMessage.length > 0) {
+                        writeln("> client ", readClient.toHash(), " sent an update...");
 
                         foreach(j, Socket writeClient ; connectedClientList) {
                             if (i != j) {
+                                writeln("Sending update to client ", writeClient.toHash());
                                 writeClient.send(cast(char[])dup(cast(const(byte)[])clientMessage)); //TODO: understand/simplify this line
                             }
                         }
@@ -57,7 +71,7 @@ void main() {
                 newClient.send("... connected to the server");
 
                 connectedClientList ~= newClient;
-                writeln("> client ", connectedClientList.length, " added to the client list...");
+                writeln("> client ", newClient.toHash(), " added to the client list...");
             }
             else {
                 auto newClient = listener.accept();
