@@ -39,8 +39,8 @@ class Server {
         writeln("\nAwaiting client connections...");
 
         while (serverOnline) {
+            auto newClient = this.listener.accept();
             if (this.connectedClientList.length < this.maxNoOfClients) {
-                auto newClient = this.listener.accept();
                 newClient.send("... connected to the server");
 
                 this.connectedClientList ~= newClient;
@@ -51,7 +51,6 @@ class Server {
                     }).start();
             }
             else {
-                auto newClient = this.listener.accept();
                 newClient.send("... cannot connect to the server, maximum no. of clients reached");
                 newClient.shutdown(SocketShutdown.BOTH);
                 newClient.close();
