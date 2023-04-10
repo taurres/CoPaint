@@ -2,6 +2,8 @@
 import std.stdio;
 import std.string;
 import surface;
+import command;
+
 
 // Load the SDL2 library
 import bindbc.sdl;
