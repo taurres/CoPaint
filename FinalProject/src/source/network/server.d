@@ -44,10 +44,8 @@ class Server {
 
         // start accepting client connections on main thread
         while (serverOnline) {
-            // check if the max no. of clients are connected
+            auto newClient = this.listener.accept();
             if (this.connectedClientList.length < this.maxNoOfClients) {
-                // accept new client connection requests
-                auto newClient = this.listener.accept();
                 newClient.send("... connected to the server");
 
                 // add new client on the connected client list
@@ -60,9 +58,6 @@ class Server {
                     }).start();
             }
             else {
-                // accept new client momentarily to let them know max connections reached,
-                // then close the connection
-                auto newClient = this.listener.accept();
                 newClient.send("... cannot connect to the server, maximum no. of clients reached");
                 // close client socket
                 newClient.shutdown(SocketShutdown.BOTH);
