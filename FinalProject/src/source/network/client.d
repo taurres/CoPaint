@@ -3,33 +3,52 @@ import std.stdio;
 import std.socket;
 import core.thread.osthread;
 
-void main() {
-    writeln("Starting client... ");
+class Client {
+    Socket socket;
 
-    writeln("\nCreating socket...");
-    auto socket = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
-    socket.connect(new InternetAddress("localhost", 8000));
-    scope(exit) socket.close();
+    this(string host="localhost", ushort port=8000) {
+        writeln("Starting client... ");
 
-    byte[1024] buffer;
+        writeln("\nCreating socket...");
+        this.socket = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
 
-    writeln(cast(char[])(buffer[0 .. socket.receive(buffer)]));
-    write("> ");
+        this.socket.connect(new InternetAddress(host, port));
+    }
 
-    new Thread({
-                while(true) {
-                    auto serverReply = buffer[0 .. socket.receive(buffer)];
+    ~this() {
+        this.socket.close();
+    }
 
-                    if(serverReply.length > 0) {
-                        writeln("\nServer > ", cast(char[])(serverReply.dup));
-                    }
-                }
+    void run() {
+        byte[1024] buffer;
+
+        writeln(cast(char[])(buffer[0 .. socket.receive(buffer)]));
+        write("> ");
+
+        new Thread({
+                this.listenForSyncs(socket, buffer);
             }).start();
 
-    while(true) {
-        foreach(line; stdin.byLine) {
-            write("> ");
-            socket.send(line);
+        while(true) {
+            foreach(line; stdin.byLine) {
+                write("> ");
+                socket.send(line);
+            }
         }
     }
+
+    void listenForSyncs(Socket socket, byte[] buffer) {
+        while(true) {
+            auto serverReply = buffer[0 .. socket.receive(buffer)];
+
+            if(serverReply.length > 0) {
+                writeln("\nServer > ", cast(char[])(serverReply.dup));
+            }
+        }
+    }
+}
+
+void main() {
+    Client client = new Client();
+    client.run();
 }
