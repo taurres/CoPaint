@@ -2,12 +2,14 @@
 import std.stdio;
 import std.socket;
 import core.thread.osthread;
+import Deque : Deque;
 
 class Server {
     Socket listener;
     // initialize collection of sockets to keep track of clients
     Socket[] connectedClientList;
     int maxNoOfClients;
+    auto dq = new Deque!(char[]);
 
     this(string host="localhost", ushort port=8000, int maxNoOfClients=3) {
         writeln("Starting server...");
@@ -75,6 +77,9 @@ class Server {
         // initialize buffer to pass data between server and clients
         byte[1024] buffer;
 
+        // bring the client upto speed with previous updates
+        this.fastForwardClient(client);
+
         while (clientRunning) {
             // recieve data from the client on current thread
             byte[] clientMessage = buffer[0 .. client.receive(buffer)];
@@ -88,6 +93,13 @@ class Server {
             else if (clientMessage.length > 0) {
                 // if client message contained bytes, broadcast it to all clients except current
                 this.syncClients(client, clientMessage);
+
+                // add the message to deque maintaining chat history
+                this.dq.push_back(cast(char[]) clientMessage);
+                // debug
+                writeln(this.dq.at(this.dq.size()-1));
+                writeln(this.dq.size());
+                // debug
             }
         }
     }
@@ -134,6 +146,19 @@ class Server {
         }
 
         return -1;
+    }
+
+    void fastForwardClient(Socket client) {
+        writeln("> client ", client.toHash(),  " being fast-forwarded...");
+
+        int pos = 0;
+        while(pos < this.dq.size()) {
+            writeln(this.dq.at(pos));
+            // client.send(cast(char[])dup(cast(const(byte)[]) this.dq.at(pos)));
+            pos++;
+        }
+
+        writeln("> client ", client.toHash(),  " all catched up...");
     }
 }
 

@@ -36,7 +36,7 @@ class Client {
                 this.listenForSyncs(socket, buffer);
             }).start();
 
-        // main thread is deelegated to send data to the server
+        // main thread is delegated to send data to the server
         while(true) {
             foreach(line; stdin.byLine) {
                 write("> ");
