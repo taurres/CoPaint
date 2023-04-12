@@ -92,10 +92,10 @@ class Server {
             }
             else if (clientMessage.length > 0) {
                 // if client message contained bytes, broadcast it to all clients except current
-                this.syncClients(client, clientMessage);
+                this.syncClients(client, clientMessage.dup);
 
                 // add the message to deque maintaining chat history
-                this.dq.push_back(cast(char[]) clientMessage);
+                this.dq.push_back(cast(char[]) clientMessage.dup);
                 // debug
                 writeln(this.dq.at(this.dq.size()-1));
                 writeln(this.dq.size());
