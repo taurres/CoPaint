@@ -3,13 +3,14 @@ import std.stdio;
 import std.socket;
 import core.thread.osthread;
 import Deque : Deque;
+import packet;
 
 class Server {
     Socket listener;
     // initialize collection of sockets to keep track of clients
     Socket[] connectedClientList;
     int maxNoOfClients;
-    auto dq = new Deque!(char[]);
+    auto dq = new Deque!(Packet);
 
     this(string host="localhost", ushort port=8000, int maxNoOfClients=3) {
         writeln("Starting server...");
@@ -95,7 +96,7 @@ class Server {
                 this.syncClients(client, clientMessage.dup);
 
                 // add the message to deque maintaining chat history
-                this.dq.push_back(cast(char[]) clientMessage.dup);
+                this.dq.push_back(deserializePacket(clientMessage.dup));
                 // debug
                 writeln(this.dq.at(this.dq.size()-1));
                 writeln(this.dq.size());
@@ -130,7 +131,8 @@ class Server {
             if (client.toHash() != broadcastClient.toHash()) {
                 writeln("Sending update to client ", broadcastClient.toHash(),  "...");
                 // send the current client's message to other clients
-                broadcastClient.send(cast(char[])dup(cast(const(byte)[]) clientMessage)); //TODO: understand/simplify this line
+                // broadcastClient.send(cast(char[])dup(cast(const(byte)[]) clientMessage)); //TODO: understand/simplify this line
+                broadcastClient.send(clientMessage.dup);
             }
         }
 

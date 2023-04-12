@@ -2,6 +2,7 @@
 import std.stdio;
 import std.socket;
 import core.thread.osthread;
+import packet;
 
 class Client {
     Socket socket;
@@ -41,7 +42,7 @@ class Client {
             foreach(line; stdin.byLine) {
                 write("> ");
                 // send data to the connected server socket
-                socket.send(line);
+                socket.send(createPacket("update\0", 255, 0, 255, 255, 255).serializePacket());
             }
         }
     }
@@ -52,7 +53,9 @@ class Client {
             auto serverReply = buffer[0 .. socket.receive(buffer)];
 
             if(serverReply.length > 0) {
-                writeln("\nServer > ", cast(char[])(serverReply.dup));
+                Packet p = deserializePacket(serverReply.dup);
+                // writeln("\nServer > ", cast(char[])(serverReply.dup));
+                writeln("\nServer > ", p);
             }
         }
     }
