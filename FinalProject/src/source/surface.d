@@ -5,6 +5,7 @@
   // Load the SDL2 library
   import bindbc.sdl;
   import loader = bindbc.loader.sharedlib;
+  import command:Command;
 
   struct Surface{
     SDL_Surface* imgSurface;
@@ -19,8 +20,20 @@
         SDL_FreeSurface(imgSurface);
   	}
 
-    SDL_Surface* getSurface() {
+     SDL_Surface* getSurface() {
         return imgSurface;
+    }
+
+    //command object
+    Command command;
+
+    //set command: 
+    void setCommand(Command command){
+      this.command = command;
+    }
+
+    void executeCommand(){
+      command.execute();
     }
 
   	// Update a pixel ...
