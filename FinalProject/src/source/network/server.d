@@ -97,10 +97,6 @@ class Server {
 
                 // add the message to deque maintaining chat history
                 this.dq.push_back(deserializePacket(clientMessage.dup));
-                // debug
-                writeln(this.dq.at(this.dq.size()-1));
-                writeln(this.dq.size());
-                // debug
             }
         }
     }
@@ -155,8 +151,7 @@ class Server {
 
         int pos = 0;
         while(pos < this.dq.size()) {
-            writeln(this.dq.at(pos));
-            // client.send(cast(char[])dup(cast(const(byte)[]) this.dq.at(pos)));
+            client.send(this.dq.at(pos).serializePacket());
             pos++;
         }
 
