@@ -151,8 +151,7 @@ class Server {
 
         int pos = 0;
         while(pos < this.dq.size()) {
-            writeln(this.dq.at(pos));
-            client.send(cast(char[])dup(cast(const(byte)[]) this.dq.at(pos).dup));
+            client.send(this.dq.at(pos).serializePacket());
             pos++;
         }
 
