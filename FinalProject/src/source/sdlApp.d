@@ -1,13 +1,18 @@
+module sdlApp;
+
 // Import D standard libraries
 import std.stdio;
 import std.string;
 import surface;
 import command;
 
+import deque: Deque;
 
 // Load the SDL2 library
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
+
+shared Deque sharedDq;
 
 class SDLApp{
  		this(){
@@ -47,6 +52,9 @@ class SDLApp{
             if(SDL_Init(SDL_INIT_EVERYTHING) !=0){
                 writeln("SDL_Init: ", fromStringz(SDL_GetError()));
             }
+
+            // initialize shared deque
+            sharedDq = Deque!(Command);
  		}
 
  		~this(){
@@ -136,9 +144,11 @@ class SDLApp{
                         int yPos = e.button.y;
                         //set command
                         Command updatePixel = new DrawCommand(&instance,imgSurface,xPos,yPos,this.brushSize);
+                        // after command creation, send a copy to client and add to deque
                         instance.setCommand(updatePixel);
                         instance.executeCommand();
                     }
+                    // if (sharedDq.size() > previousSize) {}
                 }
 
                 // Blit the surace (i.e. update the window with another surfaces pixels

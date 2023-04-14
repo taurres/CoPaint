@@ -4,6 +4,8 @@ import std.socket;
 import core.thread.osthread;
 import packet;
 
+import command : Command;
+
 class Client {
     Socket socket;
 
@@ -37,14 +39,21 @@ class Client {
                 this.listenForSyncs(socket, buffer);
             }).start();
 
-        // main thread is delegated to send data to the server
-        while(true) {
-            foreach(line; stdin.byLine) {
-                write("> ");
-                // send data to the connected server socket
-                socket.send(createPacket("update\0", 255, 0, 255, 255, 255).serializePacket());
-            }
-        }
+        // // main thread is delegated to send data to the server
+        // while(true) {
+        //     foreach(line; stdin.byLine) {
+        //         write("> ");
+        //         // send data to the connected server socket
+        //         socket.send(createPacket("update\0", 255, 0, 255, 255, 255).serializePacket());
+        //     }
+        // }
+    }
+
+    void sendToServer(Command c) {
+        // parse the command into the paramaters
+        // params
+        // params
+        socket.send(createPacket("update\0", 255, 0, 255, 255, 255).serializePacket());
     }
 
     void listenForSyncs(Socket socket, byte[] buffer) {
@@ -54,6 +63,7 @@ class Client {
 
             if(serverReply.length > 0) {
                 Packet p = deserializePacket(serverReply.dup);
+                // add this packet to the shared deque
                 // writeln("\nServer > ", cast(char[])(serverReply.dup));
                 writeln("\nServer > ", p);
             }
