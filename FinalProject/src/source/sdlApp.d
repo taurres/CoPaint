@@ -7,15 +7,17 @@ import surface;
 import command;
 
 import deque: Deque;
-import network.client : Client;
+import client : Client;
 
 // Load the SDL2 library
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
 
-shared Deque sharedDq;
+// TODO shared Deque!(Command) sharedDq;
 
 class SDLApp{
+    Client client;
+
  		this(){
  			// Handle initialization...
  			// SDL_Init
@@ -54,12 +56,12 @@ class SDLApp{
                 writeln("SDL_Init: ", fromStringz(SDL_GetError()));
             }
 
-            // initialize shared deque
-            sharedDq = Deque!(Command);
+            // TODO initialize shared deque
+            // sharedDq = new Deque!(Command);
             int previousSize = 0;
 
             // start client
-            Client client = new Client();
+            client = new Client();
             client.run();
  		}
 
@@ -129,6 +131,7 @@ class SDLApp{
                 while(SDL_PollEvent(&e) !=0){
                     if(e.type == SDL_QUIT){
                         runApplication= false;
+                        client.close();
                     }
                     else if(e.type == SDL_MOUSEBUTTONDOWN){
                         drawing=true;
@@ -152,14 +155,15 @@ class SDLApp{
                         Command updatePixel = new DrawCommand(&instance,imgSurface,xPos,yPos,this.brushSize);
                         // after command creation, send a copy to client and add to deque
                         client.sendToServer(updatePixel);
-                        sharedDq.push_back(updatePixel);
+                        // sharedDq.push_back(updatePixel);
                     }
 
-                    if (sharedDq.size() > previousSize) {
-                        instance.setCommand(sharedDq.back());
-                        instance.executeCommand();
-                        previousSize += 1; //sharedDq.size();
-                    }
+                    // TODO
+                    // if (sharedDq.size() > previousSize) {
+                    //     instance.setCommand(sharedDq.back());
+                    //     instance.executeCommand();
+                    //     previousSize += 1; //sharedDq.size();
+                    // }
                 }
 
                 // Blit the surace (i.e. update the window with another surfaces pixels

@@ -6,6 +6,7 @@
   "targetType": "executable",
 
   "targetPath": "bin",
+  "excludedSourceFiles": ["source/network/server.d"],
 
   "dependencies": {
     "bindbc-sdl": "~>1.2.4"

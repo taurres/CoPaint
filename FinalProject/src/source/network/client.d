@@ -49,6 +49,11 @@ class Client {
         // }
     }
 
+    void close() {
+        this.socket.shutdown(SocketShutdown.BOTH);
+        this.socket.close();
+    }
+
     void sendToServer(Command c) {
         // parse the command into the paramaters
         // params
@@ -70,8 +75,3 @@ class Client {
         }
     }
 }
-
-// void main() {
-//     Client client = new Client();
-//     client.run();
-// }
