@@ -5,7 +5,7 @@
   // Load the SDL2 library
   import bindbc.sdl;
   import loader = bindbc.loader.sharedlib;
-  import command:Command;
+  import command;
 
   struct Surface{
     SDL_Surface* imgSurface;
@@ -33,7 +33,16 @@
     }
 
     void executeCommand(){
-      command.execute();
+      // TODO execute different commands
+      // Loop through and update specific pixels
+      DrawCommand drawCommand = cast(DrawCommand) command;
+      int brushSize = drawCommand.brushSize;
+        for(int w=-brushSize; w < brushSize; w++){
+          for(int h=-brushSize; h < brushSize; h++){
+              UpdateSurfacePixel(imgSurface, drawCommand.xPos+w, drawCommand.yPos+h);
+          }
+      
+    }
     }
 
   	// Update a pixel ...

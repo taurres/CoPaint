@@ -59,10 +59,6 @@ class SDLApp{
             // TODO initialize shared deque
             // sharedDq = new Deque!(Command);
             int previousSize = 0;
-
-            // start client
-            client = new Client();
-            client.run();
  		}
 
  		~this(){
@@ -113,6 +109,10 @@ class SDLApp{
             // Accessing imgSurface from surface struct
             SDL_Surface* imgSurface = instance.getSurface();
 
+            // start client
+            client = new Client(&instance);
+            client.run();
+
 			// Flag for determing if we are running the main application loop
             bool runApplication = true;
             // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
@@ -152,10 +152,12 @@ class SDLApp{
                         int xPos = e.button.x;
                         int yPos = e.button.y;
                         //set command
-                        Command updatePixel = new DrawCommand(&instance,imgSurface,xPos,yPos,this.brushSize);
+                        Command updatePixel = new DrawCommand(xPos,yPos,this.brushSize);
                         // after command creation, send a copy to client and add to deque
                         client.sendToServer(updatePixel);
-                        // sharedDq.push_back(updatePixel);
+                        instance.setCommand(updatePixel);
+                        instance.executeCommand();
+                        // TODO sharedDq.push_back(updatePixel);
                     }
 
                     // TODO

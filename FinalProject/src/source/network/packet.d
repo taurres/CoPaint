@@ -1,13 +1,15 @@
 import std.stdio;
 import core.stdc.string;
+import command;
 
 struct Packet{
-	char[16] command;
+	char[16] commandName;
     int x;
     int y;
     int r;
     int g;
     int b;
+    int brushSize;
 
     /**
      * Serializes the packet into a byte array
@@ -17,19 +19,21 @@ struct Packet{
         debug writeln("Serializing packet");
 
         char[Packet.sizeof] payload;
-		memmove(&payload, &command, command.sizeof);
+		memmove(&payload, &commandName, commandName.sizeof);
 		memmove(&payload[16], &x, x.sizeof);
 		memmove(&payload[20], &y, y.sizeof);
         memmove(&payload[24], &r, r.sizeof);
         memmove(&payload[28], &g, g.sizeof);
         memmove(&payload[32], &b, b.sizeof);
+        memmove(&payload[36], &brushSize, brushSize.sizeof);
 
-        debug writeln("command is:", command);
+        debug writeln("commandName is:", commandName);
 		debug writeln("x is:", x);
 		debug writeln("y is:", y);
         debug writeln("r is:", r);
         debug writeln("g is:", g);
         debug writeln("b is:", b);
+        debug writeln("brushSize is:", brushSize);
 
         return payload;
     }
@@ -37,23 +41,21 @@ struct Packet{
 }
 
 /**
- * Creates a packet
- * @param command the command to send
- * @param x the x coordinate
- * @param y the y coordinate
- * @param r the red value
- * @param g the green value
- * @param b the blue value
- * @return the packet
+ * Creates a packet from a command
+ * @param command the command to create a packet from
+ * @return the created packet
  */
-Packet createPacket(char[16] command, int x, int y, int r, int g, int b){
+Packet createPacket(Command cmd){
+    writeln("Debug: type of cmd is: ", typeof(cmd).stringof);
+    DrawCommand command = cast(DrawCommand)cmd;
     Packet p;
-    p.command = command;
-    p.x = x;
-    p.y = y;
-    p.r = r;
-    p.g = g;
-    p.b = b;
+    p.commandName = command.name;
+    p.x = command.xPos;
+    p.y = command.yPos;
+    // p.r = command.r;
+    // p.g = command.g;
+    // p.b = command.b;
+    p.brushSize = command.brushSize;
     return p;
 }
 
@@ -69,25 +71,28 @@ Packet deserializePacket(byte[] buffer){
     debug writeln("buffer (raw bytes): ",buffer);
 
     Packet p;
-    p.command = cast(char[])buffer[0..16].dup;
+    p.commandName = cast(char[])buffer[0..16].dup;
     byte[4] fieldX = buffer[16..20].dup;
     byte[4] fieldY = buffer[20..24].dup;
     byte[4] fieldR = buffer[24..28].dup;
     byte[4] fieldG = buffer[28..32].dup;
     byte[4] fieldB = buffer[32..36].dup;
+    byte[4] fieldBrushSize = buffer[36..40].dup;
 
     p.x = *cast(int*)&fieldX;
     p.y = *cast(int*)&fieldY;
     p.r = *cast(int*)&fieldR;
     p.g = *cast(int*)&fieldG;
     p.b = *cast(int*)&fieldB;
+    p.brushSize = *cast(int*)&fieldBrushSize;
 
-    debug writeln("command is:", p.command);
+    debug writeln("commandName is:", p.commandName);
     debug writeln("x is:", p.x);
     debug writeln("y is:", p.y);
     debug writeln("r is:", p.r);
     debug writeln("g is:", p.g);
     debug writeln("b is:", p.b);
+    debug writeln("brushSize is:", p.brushSize);
 
     return p;
 }

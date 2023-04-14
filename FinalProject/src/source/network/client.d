@@ -3,13 +3,15 @@ import std.stdio;
 import std.socket;
 import core.thread.osthread;
 import packet;
-
-import command : Command;
+import command;
+import surface;
 
 class Client {
     Socket socket;
+    Surface* instance;
 
-    this(string host="localhost", ushort port=8000) {
+    this(Surface* instance=null, string host="localhost", ushort port=8000) {
+        this.instance = instance;
         writeln("Starting client... ");
 
         writeln("\nCreating socket...");
@@ -54,11 +56,11 @@ class Client {
         this.socket.close();
     }
 
-    void sendToServer(Command c) {
+    void sendToServer(Command command) {
         // parse the command into the paramaters
         // params
         // params
-        socket.send(createPacket("update\0", 255, 0, 255, 255, 255).serializePacket());
+        socket.send(createPacket(command).serializePacket());
     }
 
     void listenForSyncs(Socket socket, byte[] buffer) {
@@ -69,9 +71,11 @@ class Client {
             if(serverReply.length > 0) {
                 Packet p = deserializePacket(serverReply.dup);
                 // add this packet to the shared deque
-                // writeln("\nServer > ", cast(char[])(serverReply.dup));
-                writeln("\nServer > ", p);
+                DrawCommand updatePixel = new DrawCommand(p.x, p.y, p.brushSize);
+                instance.setCommand(updatePixel);
+                instance.executeCommand();
             }
         }
     }
+
 }
