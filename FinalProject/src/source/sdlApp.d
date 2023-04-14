@@ -7,6 +7,7 @@ import surface;
 import command;
 
 import deque: Deque;
+import network.client : Client;
 
 // Load the SDL2 library
 import bindbc.sdl;
@@ -55,6 +56,11 @@ class SDLApp{
 
             // initialize shared deque
             sharedDq = Deque!(Command);
+            int previousSize = 0;
+
+            // start client
+            Client client = new Client();
+            client.run();
  		}
 
  		~this(){
@@ -137,7 +143,7 @@ class SDLApp{
                         else if (e.key.keysym.sym == SDLK_DOWN){
                             decrease_brush();
                         }
-                    } 
+                    }
                     else if(e.type == SDL_MOUSEMOTION && drawing){
                         // retrieve the position
                         int xPos = e.button.x;
@@ -145,10 +151,15 @@ class SDLApp{
                         //set command
                         Command updatePixel = new DrawCommand(&instance,imgSurface,xPos,yPos,this.brushSize);
                         // after command creation, send a copy to client and add to deque
-                        instance.setCommand(updatePixel);
-                        instance.executeCommand();
+                        client.sendToServer(updatePixel);
+                        sharedDq.push_back(updatePixel);
                     }
-                    // if (sharedDq.size() > previousSize) {}
+
+                    if (sharedDq.size() > previousSize) {
+                        instance.setCommand(sharedDq.back());
+                        instance.executeCommand();
+                        previousSize += 1; //sharedDq.size();
+                    }
                 }
 
                 // Blit the surace (i.e. update the window with another surfaces pixels
