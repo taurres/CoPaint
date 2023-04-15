@@ -2,7 +2,7 @@ import std.stdio;
 import core.stdc.string;
 
 struct Packet{
-	char[16] commandName;
+	int commandId;
     int x;
     int y;
     int r;
@@ -18,15 +18,15 @@ struct Packet{
         debug writeln("Serializing packet");
 
         char[Packet.sizeof] payload;
-		memmove(&payload, &commandName, commandName.sizeof);
-		memmove(&payload[16], &x, x.sizeof);
-		memmove(&payload[20], &y, y.sizeof);
-        memmove(&payload[24], &r, r.sizeof);
-        memmove(&payload[28], &g, g.sizeof);
-        memmove(&payload[32], &b, b.sizeof);
-        memmove(&payload[36], &brushSize, brushSize.sizeof);
+		memmove(&payload, &commandId, commandId.sizeof);
+		memmove(&payload[4], &x, x.sizeof);
+		memmove(&payload[8], &y, y.sizeof);
+        memmove(&payload[12], &r, r.sizeof);
+        memmove(&payload[16], &g, g.sizeof);
+        memmove(&payload[20], &b, b.sizeof);
+        memmove(&payload[24], &brushSize, brushSize.sizeof);
 
-        debug writeln("commandName is:", commandName);
+        debug writeln("commandId is:", commandId);
 		debug writeln("x is:", x);
 		debug writeln("y is:", y);
         debug writeln("r is:", r);
@@ -51,14 +51,15 @@ Packet deserializePacket(byte[] buffer){
     debug writeln("buffer (raw bytes): ",buffer);
 
     Packet p;
-    p.commandName = cast(char[])buffer[0..16].dup;
-    byte[4] fieldX = buffer[16..20].dup;
-    byte[4] fieldY = buffer[20..24].dup;
-    byte[4] fieldR = buffer[24..28].dup;
-    byte[4] fieldG = buffer[28..32].dup;
-    byte[4] fieldB = buffer[32..36].dup;
-    byte[4] fieldBrushSize = buffer[36..40].dup;
+    byte[4] fieldCommandId = buffer[0..4].dup;
+    byte[4] fieldX = buffer[4..8].dup;
+    byte[4] fieldY = buffer[8..12].dup;
+    byte[4] fieldR = buffer[12..16].dup;
+    byte[4] fieldG = buffer[16..20].dup;
+    byte[4] fieldB = buffer[20..24].dup;
+    byte[4] fieldBrushSize = buffer[24..28].dup;
 
+    p.commandId = *cast(int*)&fieldCommandId;
     p.x = *cast(int*)&fieldX;
     p.y = *cast(int*)&fieldY;
     p.r = *cast(int*)&fieldR;
@@ -66,7 +67,7 @@ Packet deserializePacket(byte[] buffer){
     p.b = *cast(int*)&fieldB;
     p.brushSize = *cast(int*)&fieldBrushSize;
 
-    debug writeln("commandName is:", p.commandName);
+    debug writeln("commandId is:", p.commandId);
     debug writeln("x is:", p.x);
     debug writeln("y is:", p.y);
     debug writeln("r is:", p.r);

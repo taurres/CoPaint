@@ -70,9 +70,9 @@ class Client {
 
             if(serverReply.length > 0) {
                 Packet p = deserializePacket(serverReply.dup);
-                // add this packet to the shared deque
-                DrawCommand updatePixel = new DrawCommand(p.x, p.y, p.brushSize);
-                instance.setCommand(updatePixel);
+                // TODO add this packet to the shared deque
+                Command command = Command.fromPacket(p);
+                instance.setCommand(command);
                 instance.executeCommand();
             }
         }
