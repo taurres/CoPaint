@@ -33,21 +33,13 @@
     }
 
     void executeCommand(){
-      // TODO execute different commands
-      // Loop through and update specific pixels
-      DrawCommand drawCommand = cast(DrawCommand) command;
-      int brushSize = drawCommand.brushSize;
-        for(int w=-brushSize; w < brushSize; w++){
-          for(int h=-brushSize; h < brushSize; h++){
-              UpdateSurfacePixel(imgSurface, drawCommand.xPos+w, drawCommand.yPos+h);
-          }
-      
-    }
+      command.execute(&this);
     }
 
   	// Update a pixel ...
   	// Function for updating the pixels in a surface to a 'blue-ish' color.
-    void UpdateSurfacePixel(SDL_Surface* surface, int xPos, int yPos){
+    void UpdateSurfacePixel(int xPos, int yPos){
+        SDL_Surface* surface = imgSurface;
         // When we modify pixels, we need to lock the surface first
         SDL_LockSurface(surface);
         // Make sure to unlock the surface when we are done.

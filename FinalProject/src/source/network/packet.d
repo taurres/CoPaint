@@ -1,6 +1,5 @@
 import std.stdio;
 import core.stdc.string;
-import command;
 
 struct Packet{
 	char[16] commandName;
@@ -38,25 +37,6 @@ struct Packet{
         return payload;
     }
 
-}
-
-/**
- * Creates a packet from a command
- * @param command the command to create a packet from
- * @return the created packet
- */
-Packet createPacket(Command cmd){
-    writeln("Debug: type of cmd is: ", typeof(cmd).stringof);
-    DrawCommand command = cast(DrawCommand)cmd;
-    Packet p;
-    p.commandName = command.name;
-    p.x = command.xPos;
-    p.y = command.yPos;
-    // p.r = command.r;
-    // p.g = command.g;
-    // p.b = command.b;
-    p.brushSize = command.brushSize;
-    return p;
 }
 
 /**
