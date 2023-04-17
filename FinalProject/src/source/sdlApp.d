@@ -146,6 +146,13 @@ class SDLApp{
                         else if (e.key.keysym.sym == SDLK_DOWN){
                             decrease_brush();
                         }
+                        //UNDO
+                        if (e.key.keysym.sym == SDLK_z && (SDL_GetModState() & KMOD_LGUI) 
+                            && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
+                            writeln("UNDO");
+                            //TODO get previous command here
+                            // Command cmd = new UndoCommand()
+                        }
                     }
                     else if(e.type == SDL_MOUSEMOTION && drawing){
                         // retrieve the position
