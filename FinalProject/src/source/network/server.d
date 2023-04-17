@@ -12,6 +12,7 @@ class Server {
     Socket[] connectedClientList;
     int maxNoOfClients;
     auto dq = new Deque!(Packet);
+    // TODO redo deque
 
     this(string host="localhost", ushort port=8000, int maxNoOfClients=3) {
         writeln("Starting server...");

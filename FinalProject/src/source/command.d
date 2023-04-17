@@ -11,6 +11,8 @@ import constants;
      */ 
     void execute(Surface* surface);
 
+    // TODO - add unexecute method
+
     /**
      * Covert this command to a packet.
      */
@@ -58,13 +60,23 @@ import constants;
     }
 
     void execute(Surface* surface){
+      // TODO capture previous state
+
       // Loop through and update specific pixels
         for(int w=-brushSize; w < brushSize; w++){
           for(int h=-brushSize; h < brushSize; h++){
               surface.UpdateSurfacePixel(xPos+w, yPos+h);
           }
       }
+    
+  
     }
+
+    // TODO
+    // void unexecute(Surface* surface){
+    //     surface.changePixel(xPos, yPos, pre_r, pre_g, b);
+    // }
+    
 
     Packet toPacket() {
       Packet p;
@@ -121,8 +133,7 @@ import constants;
     int commandId = UNDO_COMMAND_ID;
     // Deque undo_deque = new Deque();
     void execute(Surface* surface) {
-    //   // Pop back from global command deque
-    //   // Push into redo stack
+    //  TODO call unexecute of draw command
     }
     Packet toPacket() { return Packet();}
   }

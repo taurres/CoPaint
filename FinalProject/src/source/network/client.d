@@ -71,7 +71,7 @@ class Client {
 
             if(serverReply.length > 0) {
                 Packet p = deserializePacket(serverReply.dup);
-                // TODO add this packet to the shared deque
+                // TODO add this packet to the deque
                 Command command = Command.fromPacket(p);
                 instance.setCommand(command);
                 instance.executeCommand();
