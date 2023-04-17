@@ -1,44 +1,45 @@
 {
-  "authors": ["Cauviya Selva, Muskaan Nandu, Gopal Krishna, Jiaxi Wen"],
-
-  "copyright": "Copyright © 2023, Cauviya Selva, Muskaan Nandu, Gopal Krishna, Jiaxi Wen",
-
-  "targetType": "executable",
-
-  "targetPath": "bin",
-  "excludedSourceFiles": ["source/network/server.d"],
-
-  "dependencies": {
-    "bindbc-sdl": "~>1.2.4"
-  },
-
-  "configurations": [
-    {
-      "name": "executable"
-    },
-
-    {
-      "name": "unittest",
-      "importPaths": ["test/", "source/"],
-      "sourcePaths": ["test/", "source/"],
-
-      "preBuildCommands": [
-        "dub run unit-threaded -c gen_ut_main -- -f bin/ut.d -d dub"
-      ],
-
-      "mainSourceFile": "bin/ut.d",
-
-      "excludedSourceFiles": ["source/app.d"],
-
-      "dependencies": {
-        "unit-threaded": "~>2.1.2"
-      }
-    }
-  ],
-
-  "description": "Integrated Code",
-
-  "license": "proprietary",
-
-  "name": "final_project"
+	"authors": [
+		"Cauviya Selva, Gopal Krishna, Jiaxi Wen, Muskaan Nandu"
+	],
+	"configurations": [
+		{
+			"name": "executable",
+			"targetType": "executable"
+		},
+		{
+			"dependencies": {
+				"unit-threaded": "~>2.1.2"
+			},
+			"excludedSourceFiles": [
+				"source/app.d"
+			],
+			"importPaths": [
+				"test/",
+				"source/"
+			],
+			"mainSourceFile": "bin/ut.d",
+			"name": "unittest",
+			"preBuildCommands": [
+				"dub run unit-threaded -c gen_ut_main -- -f bin/ut.d -d dub"
+			],
+			"sourcePaths": [
+				"test/",
+				"source/"
+			],
+			"targetType": "executable"
+		}
+	],
+	"copyright": "Copyright © 2023, Cauviya Selva, Gopal Krishna, Jiaxi Wen, Muskaan Nandu",
+	"dependencies": {
+		"bindbc-sdl": "~>1.2.4"
+	},
+	"description": "CS 5500 - Final Project - Collaborative Paint App",
+	"excludedSourceFiles": [
+		"source/network/server.d"
+	],
+	"license": "proprietary",
+	"name": "final_project",
+	"targetPath": "bin",
+	"targetType": "executable"
 }
