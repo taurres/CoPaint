@@ -33,34 +33,25 @@
     }
 
     void executeCommand(){
-      // TODO execute different commands
-      // Loop through and update specific pixels
-      DrawCommand drawCommand = cast(DrawCommand) command;
-      int brushSize = drawCommand.brushSize;
-        for(int w=-brushSize; w < brushSize; w++){
-          for(int h=-brushSize; h < brushSize; h++){
-              UpdateSurfacePixel(imgSurface, drawCommand.xPos+w, drawCommand.yPos+h);
-          }
-      
-    }
+      command.execute(&this);
     }
 
   	// Update a pixel ...
   	// Function for updating the pixels in a surface to a 'blue-ish' color.
-    void UpdateSurfacePixel(SDL_Surface* surface, int xPos, int yPos){
+    void UpdateSurfacePixel(int xPos, int yPos){
         // When we modify pixels, we need to lock the surface first
-        SDL_LockSurface(surface);
+        SDL_LockSurface(imgSurface);
         // Make sure to unlock the surface when we are done.
-        scope(exit) SDL_UnlockSurface(surface);
+        scope(exit) SDL_UnlockSurface(imgSurface);
 
         // Retrieve the pixel arraay that we want to modify
-        ubyte* pixelArray = cast(ubyte*)surface.pixels;
+        ubyte* pixelArray = cast(ubyte*)imgSurface.pixels;
         // Change the 'blue' component of the pixels
-        pixelArray[yPos*surface.pitch + xPos*surface.format.BytesPerPixel+0] = 255;
+        pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+0] = 255;
         // Change the 'green' component of the pixels
-        pixelArray[yPos*surface.pitch + xPos*surface.format.BytesPerPixel+1] = 128;
+        pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+1] = 128;
         // Change the 'red' component of the pixels
-        pixelArray[yPos*surface.pitch + xPos*surface.format.BytesPerPixel+2] = 32;
+        pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+2] = 32;
     }
 
   /* Changing pixel value for position (x,y) to the given r,g,b values. */

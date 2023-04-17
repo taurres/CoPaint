@@ -30,7 +30,7 @@ class Client {
 
     void run() {
         // initialize buffer to pass data between client and server
-        byte[1024] buffer;
+        byte[10240] buffer;
 
         // receive connection ACK from the server
         writeln(cast(char[])(buffer[0 .. socket.receive(buffer)]));
@@ -60,7 +60,7 @@ class Client {
         // parse the command into the paramaters
         // params
         // params
-        socket.send(createPacket(command).serializePacket());
+        socket.send(command.toPacket().serializePacket());
     }
 
     void listenForSyncs(Socket socket, byte[] buffer) {
@@ -70,9 +70,9 @@ class Client {
 
             if(serverReply.length > 0) {
                 Packet p = deserializePacket(serverReply.dup);
-                // add this packet to the shared deque
-                DrawCommand updatePixel = new DrawCommand(p.x, p.y, p.brushSize);
-                instance.setCommand(updatePixel);
+                // TODO add this packet to the shared deque
+                Command command = Command.fromPacket(p);
+                instance.setCommand(command);
                 instance.executeCommand();
             }
         }

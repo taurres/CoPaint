@@ -76,7 +76,7 @@ class Server {
         writeln("client ", client.toHash(), " thread started...");
 
         // initialize buffer to pass data between server and clients
-        byte[1024] buffer;
+        byte[10240] buffer;
 
         // bring the client upto speed with previous updates
         this.fastForwardClient(client);
