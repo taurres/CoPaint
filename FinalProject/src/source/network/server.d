@@ -3,6 +3,7 @@ module network.server;
 import std.stdio;
 import std.socket;
 import core.thread.osthread;
+import core.time;
 import network.deque;
 import network.packet;
 
@@ -153,6 +154,7 @@ class Server {
         int pos = 0;
         while(pos < this.dq.size()) {
             client.send(this.dq.at(pos).serializePacket());
+            Thread.sleep(dur!("msecs")(1));
             pos++;
         }
 
