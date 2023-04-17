@@ -1,6 +1,6 @@
 import std.stdio;
 import std.string;
-import deque;
+import Deque;
 import surface;
 import packet;
 import constants;

@@ -6,7 +6,7 @@ import std.string;
 import surface;
 import command;
 
-import deque: Deque;
+import Deque: Deque;
 import client : Client;
 
 // Load the SDL2 library
