@@ -1,9 +1,10 @@
-// @file server.d
+module network.server;
+
 import std.stdio;
 import std.socket;
 import core.thread.osthread;
-import Deque : Deque;
-import packet;
+import network.deque;
+import network.packet;
 
 class Server {
     Socket listener;

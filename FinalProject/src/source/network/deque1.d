@@ -1,7 +1,4 @@
-// Run your program with:
-// dmd Deque.d -unittest -of=test && ./test
-//
-// This will execute each of the unit tests telling you if they passed.
+module network.deque;
 
 import std.stdio;
 import std.exception;

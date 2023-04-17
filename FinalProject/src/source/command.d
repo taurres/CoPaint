@@ -1,8 +1,8 @@
 import std.stdio;
 import std.string;
-import Deque;
+import network.deque;
+import network.packet;
 import surface;
-import packet;
 import constants;
 
  interface Command {

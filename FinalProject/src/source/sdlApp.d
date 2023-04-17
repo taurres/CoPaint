@@ -6,8 +6,8 @@ import std.string;
 import surface;
 import command;
 
-import Deque: Deque;
-import client : Client;
+import network.deque;
+import network.client;
 
 // Load the SDL2 library
 import bindbc.sdl;

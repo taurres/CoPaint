@@ -1,3 +1,5 @@
+module network.packet;
+
 import std.stdio;
 import core.stdc.string;
 

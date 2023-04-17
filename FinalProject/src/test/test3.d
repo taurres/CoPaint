@@ -13,7 +13,7 @@ unittest{
 	ubyte r = 32;
 	ubyte g = 128;
 	ubyte b = 255;
-	s.UpdateSurfacePixel(s.getSurface(), x, y);
+	s.UpdateSurfacePixel(x, y);
 
 	SDL_Color pixel = s.pixelAt(x, y);
 	assert(pixel.r == r, "Pixel's red value is incorrect.");

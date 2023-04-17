@@ -1,7 +1,7 @@
 import std.stdio;
 import std.exception;
 import core.exception : AssertError;
-import deque:Deque;
+import network.deque;
 
 unittest{
     auto myDeque = new Deque!(int);

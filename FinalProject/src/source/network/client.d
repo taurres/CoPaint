@@ -1,8 +1,9 @@
-// @file client.d
+module network.client;
+
 import std.stdio;
 import std.socket;
 import core.thread.osthread;
-import packet;
+import network.packet;
 import command;
 import surface;
 
