@@ -19,10 +19,10 @@ struct Packet{
      * Serializes the packet into a byte array
      * @return the serialized packet
      */
-    char[Packet.sizeof] serializePacket(){
+    byte[Packet.sizeof] serializePacket(){
         debug writeln("Serializing packet");
 
-        char[Packet.sizeof] payload;
+        byte[Packet.sizeof] payload;
 		memmove(&payload, &commandId, commandId.sizeof);
 		memmove(&payload[4], &x, x.sizeof);
 		memmove(&payload[8], &y, y.sizeof);
