@@ -13,7 +13,6 @@ import network.client;
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
 
-// TODO shared Deque!(Command) sharedDq;
 
 class SDLApp{
     Client client;
@@ -55,10 +54,6 @@ class SDLApp{
             if(SDL_Init(SDL_INIT_EVERYTHING) !=0){
                 writeln("SDL_Init: ", fromStringz(SDL_GetError()));
             }
-
-            // TODO initialize shared deque
-            // sharedDq = new Deque!(Command);
-            int previousSize = 0;
  		}
 
  		~this(){
@@ -103,7 +98,6 @@ class SDLApp{
                                         SDL_WINDOW_SHOWN);
 
             // Load the bitmap surface
-            // SDL_Surface* imgSurface = SDL_CreateRGBSurface(0,640,480,32,0,0,0,0);
             Surface instance = Surface(1);
 
             // Accessing imgSurface from surface struct
@@ -138,7 +132,7 @@ class SDLApp{
                     }else if(e.type == SDL_MOUSEBUTTONUP){
                         drawing=false;
                     }
-                    //BRUSHSIZE
+                    // BRUSHSIZE
                     else if(e.type == SDL_KEYDOWN){
                         if (e.key.keysym.sym == SDLK_UP){
                             increase_brush();
@@ -147,6 +141,7 @@ class SDLApp{
                             decrease_brush();
                         }
                     }
+                    // DRAW
                     else if(e.type == SDL_MOUSEMOTION && drawing){
                         // retrieve the position
                         int xPos = e.button.x;
@@ -155,17 +150,10 @@ class SDLApp{
                         Command updatePixel = new DrawCommand(xPos,yPos,this.brushSize);
                         // after command creation, send a copy to client and add to deque
                         client.sendToServer(updatePixel);
+                        // execute the command
                         instance.setCommand(updatePixel);
                         instance.executeCommand();
-                        // TODO sharedDq.push_back(updatePixel);
                     }
-
-                    // TODO
-                    // if (sharedDq.size() > previousSize) {
-                    //     instance.setCommand(sharedDq.back());
-                    //     instance.executeCommand();
-                    //     previousSize += 1; //sharedDq.size();
-                    // }
                 }
 
                 // Blit the surace (i.e. update the window with another surfaces pixels
@@ -173,9 +161,9 @@ class SDLApp{
                 SDL_BlitSurface(imgSurface,null,SDL_GetWindowSurface(window),null);
                 // Update the window surface
                 SDL_UpdateWindowSurface(window);
-                // Delay for 16 milliseconds
+                // Delay for 10 milliseconds
                 // Otherwise the program refreshes too quickly
-                SDL_Delay(16);
+                SDL_Delay(10);
             }
 
             // Destroy our window
