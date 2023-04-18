@@ -30,12 +30,12 @@ import loader = bindbc.loader.sharedlib;
       */
     static Command fromPacket(Packet packet) {
       if (packet.commandId == DRAW_COMMAND_ID) {
-        return new DrawCommand(packet.x, packet.y, packet.brushSize, packet.preR, packet.preG, packet.preB);
+        return new DrawCommand(packet.x, packet.y, packet.brushSize, packet.r, packet.g, packet.b, packet.preR, packet.preG, packet.preB);
       } else if (packet.commandId == ERASE_COMMAND_ID) {
         return new EraseCommand(packet.x, packet.y, packet.brushSize);
       } else if (packet.commandId == UNDO_COMMAND_ID) {
         //create a draw commad and send it to undo
-        DrawCommand preCommand = new DrawCommand(packet.x, packet.y, packet.brushSize, packet.preR, packet.preG, packet.preB);
+        DrawCommand preCommand = new DrawCommand(packet.x, packet.y, packet.brushSize, packet.r, packet.g, packet.b, packet.preR, packet.preG, packet.preB);
         return new UndoCommand(preCommand); 
       } else if (packet.commandId == REDO_COMMAND_ID) {
         return new RedoCommand();
@@ -51,14 +51,20 @@ import loader = bindbc.loader.sharedlib;
     int commandId = DRAW_COMMAND_ID;
     int xPos;
     int yPos;
+    ubyte r;
+    ubyte g;
+    ubyte b;
     int brushSize;
     ubyte preR;
     ubyte preG;
     ubyte preB;
 
-    this(int xPos, int yPos, int brushSize, ubyte preR = 0, ubyte preG = 0, ubyte preB = 0){
+    this(int xPos, int yPos, int brushSize, ubyte r = 0, ubyte g = 0, ubyte b = 255, ubyte preR = 0, ubyte preG = 0, ubyte preB = 0){
         this.xPos = xPos;
         this.yPos = yPos;
+        this.r = r;
+        this.g = g;
+        this.b = b;
         this.brushSize = brushSize;
         this.preR = preR;
         this.preG = preG;
@@ -75,7 +81,7 @@ import loader = bindbc.loader.sharedlib;
       // Loop through and update specific pixels
       for(int w=-brushSize; w < brushSize; w++){
           for(int h=-brushSize; h < brushSize; h++){
-              surface.UpdateSurfacePixel(xPos+w, yPos+h);
+              surface.changePixel(xPos+w, yPos+h, r, g, b);
           }
       }
     }
@@ -94,6 +100,9 @@ import loader = bindbc.loader.sharedlib;
       p.commandId = this.commandId;
       p.x = this.xPos;
       p.y = this.yPos;
+      p.r = this.r;
+      p.g = this.g;
+      p.b = this.b;
       p.preR = this.preR;
       p.preG = this.preG;
       p.preB = this.preB;
