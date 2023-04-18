@@ -41,15 +41,6 @@ class Client {
         new Thread({
                 this.listenForSyncs(socket, buffer);
             }).start();
-
-        // // main thread is delegated to send data to the server
-        // while(true) {
-        //     foreach(line; stdin.byLine) {
-        //         write("> ");
-        //         // send data to the connected server socket
-        //         socket.send(createPacket("update\0", 255, 0, 255, 255, 255).serializePacket());
-        //     }
-        // }
     }
 
     void close() {
@@ -58,9 +49,6 @@ class Client {
     }
 
     void sendToServer(Command command) {
-        // parse the command into the paramaters
-        // params
-        // params
         socket.send(command.toPacket().serializePacket());
     }
 
@@ -71,8 +59,9 @@ class Client {
 
             if(serverReply.length > 0) {
                 Packet p = deserializePacket(serverReply.dup);
-                // TODO add this packet to the deque
+
                 Command command = Command.fromPacket(p);
+
                 instance.setCommand(command);
                 instance.executeCommand();
             }
