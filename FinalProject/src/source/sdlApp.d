@@ -13,8 +13,6 @@ import network.client;
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
 
-// TODO shared Deque!(Command) sharedDq;
-
 class SDLApp{
     Client client;
 
@@ -56,8 +54,6 @@ class SDLApp{
                 writeln("SDL_Init: ", fromStringz(SDL_GetError()));
             }
 
-            // TODO initialize shared deque
-            // sharedDq = new Deque!(Command);
             int previousSize = 0;
  		}
 
@@ -133,13 +129,14 @@ class SDLApp{
                         runApplication= false;
                         client.close();
                     }
-                    else if(e.type == SDL_MOUSEBUTTONDOWN){
+                    else if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT){
                         drawing=true;
-                    }else if(e.type == SDL_MOUSEBUTTONUP){
+                    }else if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT){
                         drawing=false;
                     }
                     //BRUSHSIZE
                     else if(e.type == SDL_KEYDOWN){
+                        // writeln("Debug: e", e.key.keysym.sym);
                         if (e.key.keysym.sym == SDLK_UP){
                             increase_brush();
                         }
@@ -147,32 +144,30 @@ class SDLApp{
                             decrease_brush();
                         }
                         //UNDO
-                        if (e.key.keysym.sym == SDLK_z && (SDL_GetModState() & KMOD_LGUI) 
+                        else if (e.key.keysym.sym == SDLK_z && (SDL_GetModState() & KMOD_LGUI) 
                             && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
-                            writeln("UNDO");
-                            //TODO get previous command here
-                            // Command cmd = new UndoCommand()
+                            Command undoCommand = new UndoCommand();
+                            client.sendToServer(undoCommand);
+                        }
+                        // REDO
+                        else if (e.key.keysym.sym == SDLK_r && (SDL_GetModState() & KMOD_LGUI) 
+                            && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
+                            Command redoCommand = new RedoCommand();
+                            client.sendToServer(redoCommand);
                         }
                     }
                     else if(e.type == SDL_MOUSEMOTION && drawing){
                         // retrieve the position
                         int xPos = e.button.x;
                         int yPos = e.button.y;
-                        //set command
+                        // create command
                         Command updatePixel = new DrawCommand(xPos,yPos,this.brushSize);
-                        // after command creation, send a copy to client and add to deque
-                        client.sendToServer(updatePixel);
+                        // execute command and send command to client
                         instance.setCommand(updatePixel);
                         instance.executeCommand();
-                        // TODO sharedDq.push_back(updatePixel);
+                        client.sendToServer(updatePixel);
                     }
 
-                    // TODO
-                    // if (sharedDq.size() > previousSize) {
-                    //     instance.setCommand(sharedDq.back());
-                    //     instance.executeCommand();
-                    //     previousSize += 1; //sharedDq.size();
-                    // }
                 }
 
                 // Blit the surace (i.e. update the window with another surfaces pixels
