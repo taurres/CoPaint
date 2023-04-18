@@ -6,6 +6,7 @@ import core.thread.osthread;
 import core.time;
 import network.deque;
 import network.packet;
+import constants;
 
 class Server {
     Socket listener;
@@ -13,6 +14,8 @@ class Server {
     Socket[] connectedClientList;
     int maxNoOfClients;
     auto dq = new Deque!(Packet);
+    // redo deque
+    auto redoDeque = new Deque!(Packet);
 
     this(string host="localhost", ushort port=8000, int maxNoOfClients=3) {
         writeln("Starting server...");
@@ -94,11 +97,25 @@ class Server {
                 break;
             }
             else if (clientMessage.length > 0) {
-                // if client message contained bytes, broadcast it to all clients except current
-                this.syncClients(client, clientMessage.dup);
-
-                // add the message to deque maintaining chat history
-                this.dq.push_back(deserializePacket(clientMessage.dup));
+                Packet curPacket = deserializePacket(clientMessage.dup);
+                if (curPacket.commandId == UNDO_COMMAND_ID) {
+                    // if the current packet is a undo packet
+                    this.handleUndo(client, curPacket);
+                } else if (curPacket.commandId == REDO_COMMAND_ID) {
+                    // if the current packet is a redo packet
+                    if (this.redoDeque.size() > 0) {
+                        Packet redoPacket = this.redoDeque.pop_back();
+                        this.dq.push_back(redoPacket);
+                        this.syncAllClients(client, redoPacket.serializePacket());
+                    }
+                } else {
+                    // add the message to deque maintaining chat history
+                    this.dq.push_back(curPacket);
+                    // empty redo deque when new draw packet is received
+                    this.redoDeque.clear();
+                    // if client message contained bytes, broadcast it to all clients except current
+                    this.syncClients(client, clientMessage.dup);
+                }
             }
         }
     }
@@ -121,7 +138,7 @@ class Server {
         }
     }
 
-    void syncClients(Socket client, byte[] clientMessage) {
+    void syncClients(Socket client, scope const(void)[] clientMessage) {
         writeln("> client ", client.toHash(), " sent an update...");
 
         // loop through all clients that are currently connected to the server
@@ -129,12 +146,43 @@ class Server {
             if (client.toHash() != broadcastClient.toHash()) {
                 writeln("Sending update to client ", broadcastClient.toHash(),  "...");
                 // send the current client's message to other clients
-                // broadcastClient.send(cast(char[])dup(cast(const(byte)[]) clientMessage)); //TODO: understand/simplify this line
                 broadcastClient.send(clientMessage.dup);
             }
         }
 
         writeln("... all clients synced");
+    }
+
+    void syncAllClients(Socket client, scope const(void)[] clientMessage) {
+                writeln("> client ", client.toHash(), " sent an update...");
+
+        // loop through all clients that are currently connected to the server
+        foreach (Socket broadcastClient ; this.connectedClientList) {
+            writeln("Sending update to client ", broadcastClient.toHash(),  "...");
+            // send the current client's message to other clients
+            broadcastClient.send(clientMessage.dup);
+            
+        }
+
+        writeln("... all clients synced");
+    }
+
+    void handleUndo(Socket client, Packet curPacket) {
+        if (this.dq.size() > 0) {
+            Packet prePacket = this.dq.pop_back();
+            curPacket.x = prePacket.x;
+            curPacket.y = prePacket.y;
+            curPacket.preR = prePacket.preR;
+            curPacket.preG = prePacket.preG;
+            curPacket.preB = prePacket.preB;
+            curPacket.brushSize = prePacket.brushSize;
+
+            // add the previous packet to redo deque
+            this.redoDeque.push_back(prePacket);
+
+            // sync all clients
+            this.syncAllClients(client, curPacket.serializePacket());
+        }
     }
 
     ulong getClientIdx(Socket client) {

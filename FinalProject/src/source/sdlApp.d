@@ -13,7 +13,6 @@ import network.client;
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
 
-
 class SDLApp{
     Client client;
 
@@ -127,18 +126,31 @@ class SDLApp{
                         runApplication= false;
                         client.close();
                     }
-                    else if(e.type == SDL_MOUSEBUTTONDOWN){
+                    else if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT){
                         drawing=true;
-                    }else if(e.type == SDL_MOUSEBUTTONUP){
+                    }else if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT){
                         drawing=false;
                     }
                     // BRUSHSIZE
                     else if(e.type == SDL_KEYDOWN){
+                        // writeln("Debug: e", e.key.keysym.sym);
                         if (e.key.keysym.sym == SDLK_UP){
                             increase_brush();
                         }
                         else if (e.key.keysym.sym == SDLK_DOWN){
                             decrease_brush();
+                        }
+                        //UNDO
+                        else if (e.key.keysym.sym == SDLK_z && (SDL_GetModState() & KMOD_LGUI) 
+                            && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
+                            Command undoCommand = new UndoCommand();
+                            client.sendToServer(undoCommand);
+                        }
+                        // REDO
+                        else if (e.key.keysym.sym == SDLK_r && (SDL_GetModState() & KMOD_LGUI) 
+                            && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
+                            Command redoCommand = new RedoCommand();
+                            client.sendToServer(redoCommand);
                         }
                     }
                     // DRAW
@@ -146,13 +158,12 @@ class SDLApp{
                         // retrieve the position
                         int xPos = e.button.x;
                         int yPos = e.button.y;
-                        //set command
+                        // create command
                         Command updatePixel = new DrawCommand(xPos,yPos,this.brushSize);
-                        // after command creation, send a copy to client and add to deque
-                        client.sendToServer(updatePixel);
-                        // execute the command
+                        // execute command and send command to client
                         instance.setCommand(updatePixel);
                         instance.executeCommand();
+                        client.sendToServer(updatePixel);
                     }
                 }
 

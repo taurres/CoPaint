@@ -33,6 +33,8 @@ interface Container(T){
     ref T front();
     // Retrieve number of elements currently in container
     size_t size();
+    // clear all elements in container
+    void clear();
 }
 
 /*
@@ -162,5 +164,12 @@ class Deque(T) : Container!(T) {
 
     size_t size() {
         return this.len;
+    }
+
+    void clear() {
+        int size = cast(int)this.size();
+        for (int i = 0; i < size; i++) {
+            this.pop_back();
+        }
     }
 }

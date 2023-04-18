@@ -59,6 +59,7 @@ class Client {
 
             if(serverReply.length > 0) {
                 Packet p = deserializePacket(serverReply.dup);
+
                 Command command = Command.fromPacket(p);
 
                 instance.setCommand(command);
