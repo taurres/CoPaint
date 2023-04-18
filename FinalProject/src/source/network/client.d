@@ -11,7 +11,7 @@ class Client {
     Socket socket;
     Surface* instance;
 
-    this(Surface* instance=null, string host="localhost", ushort port=8000) {
+    this(string host="localhost", ushort port=8000, Surface* instance=null) {
         this.instance = instance;
         writeln("Starting client... ");
 

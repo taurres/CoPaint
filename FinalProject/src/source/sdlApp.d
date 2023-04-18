@@ -87,7 +87,7 @@ class SDLApp{
  		// global variable for sdl;
 		const SDLSupport ret;
 
- 		void MainApplicationLoop(){
+ 		void MainApplicationLoop(string host, ushort port){
 			// Create an SDL window
             SDL_Window* window= SDL_CreateWindow("D SDL Painting",
                                         SDL_WINDOWPOS_UNDEFINED,
@@ -103,7 +103,7 @@ class SDLApp{
             SDL_Surface* imgSurface = instance.getSurface();
 
             // start client
-            client = new Client(&instance);
+            client = new Client(host, port, &instance);
             client.run();
 
 			// Flag for determing if we are running the main application loop
