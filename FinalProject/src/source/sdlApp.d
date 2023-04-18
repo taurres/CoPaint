@@ -88,6 +88,10 @@ class SDLApp{
             }
         }
 
+        int getBrushSize(){
+            return this.brushSize;
+        }
+
  		// Member variables like 'const SDLSupport ret'
  		// liklely belong here.
  		// global variable for sdl;
