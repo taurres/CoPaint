@@ -38,7 +38,7 @@
 
   	// Update a pixel ...
   	// Function for updating the pixels in a surface to a 'blue-ish' color.
-    void UpdateSurfacePixel(int xPos, int yPos, ubyte r = 255, ubyte g = 128, ubyte b = 32){
+    void UpdateSurfacePixel(int xPos, int yPos, ubyte r = 0, ubyte g = 0, ubyte b = 255){
         // When we modify pixels, we need to lock the surface first
         SDL_LockSurface(imgSurface);
         // Make sure to unlock the surface when we are done.
@@ -47,11 +47,11 @@
         // Retrieve the pixel arraay that we want to modify
         ubyte* pixelArray = cast(ubyte*)imgSurface.pixels;
         // Change the 'blue' component of the pixels
-        pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+0] = r;
+        pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+0] = b;
         // Change the 'green' component of the pixels
         pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+1] = g;
         // Change the 'red' component of the pixels
-        pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+2] = b;
+        pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+2] = r;
     }
 
   /* Changing pixel value for position (x,y) to the given r,g,b values. */
