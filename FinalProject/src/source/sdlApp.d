@@ -82,6 +82,17 @@ class SDLApp{
             }
         }
 
+        //Boundary method: 
+        bool boundary_function(int xPos, int yPos, int xMin, int yMin, int xMax, int yMax){
+            if ((xMin < xPos) & (xPos < xMax)){
+                if ((yMin < yPos) & (yPos < yMax)){
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
  		// Member variables like 'const SDLSupport ret'
  		// liklely belong here.
  		// global variable for sdl;
@@ -158,12 +169,26 @@ class SDLApp{
                         // retrieve the position
                         int xPos = e.button.x;
                         int yPos = e.button.y;
+                        //boundaries of window: 
+                        
+                        if (boundary_function(xPos, yPos, 1, 1, 639, 479) == true){
+                            // create command
+                            Command updatePixel = new DrawCommand(xPos,yPos,this.brushSize);
+                            // execute command and send command to client
+                            instance.setCommand(updatePixel);
+                            instance.executeCommand();
+                            client.sendToServer(updatePixel);
+                        }
+                        
+                        //this is where drawing used to be before if statement
+                        /**
                         // create command
                         Command updatePixel = new DrawCommand(xPos,yPos,this.brushSize);
                         // execute command and send command to client
                         instance.setCommand(updatePixel);
                         instance.executeCommand();
                         client.sendToServer(updatePixel);
+                        */
                     }
                 }
 
