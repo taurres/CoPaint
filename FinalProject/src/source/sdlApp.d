@@ -66,6 +66,7 @@ class SDLApp{
         // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
         //                                                but not yet released)
         bool drawing = false;
+        bool erase = false;
 
         int brushSize = 1;
 
@@ -147,6 +148,7 @@ class SDLApp{
                         //UNDO
                         else if (e.key.keysym.sym == SDLK_z && (SDL_GetModState() & KMOD_LGUI) 
                             && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
+                            writeln("Call UNDO");
                             Command undoCommand = new UndoCommand();
                             client.sendToServer(undoCommand);
                         }
@@ -156,18 +158,34 @@ class SDLApp{
                             Command redoCommand = new RedoCommand();
                             client.sendToServer(redoCommand);
                         }
+                        //ERASE
+                        else if (e.key.keysym.sym == SDLK_e && (SDL_GetModState() & KMOD_LGUI) 
+                            && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
+                            erase = erase? false:true;
+                            writeln(erase);
+                        }
                     }
-                    // DRAW
+                    // DRAW or ERASE
                     else if(e.type == SDL_MOUSEMOTION && drawing){
                         // retrieve the position
                         int xPos = e.button.x;
                         int yPos = e.button.y;
-                        // create command
-                        Command updatePixel = new DrawCommand(xPos,yPos,this.brushSize);
-                        // execute command and send command to client
-                        instance.setCommand(updatePixel);
-                        instance.executeCommand();
-                        client.sendToServer(updatePixel);
+
+                        if(!erase) {
+                            // create command
+                            Command updatePixel = new DrawCommand(xPos,yPos,this.brushSize);
+                            // execute command and send command to client
+                            instance.setCommand(updatePixel);
+                            instance.executeCommand();
+                            client.sendToServer(updatePixel);
+                        } else {
+                            writeln("ERASESEEEEEE");
+                            Command eraseCommand = new EraseCommand(xPos, yPos, this.brushSize);
+                            instance.setCommand(eraseCommand);
+                            instance.executeCommand();
+                            client.sendToServer(eraseCommand);
+                        }
+                        
                     }
                 }
 
