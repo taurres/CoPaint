@@ -9,6 +9,12 @@ import network.deque;
 import network.packet;
 import constants;
 
+/**
+ * Server class
+ * 
+ * This class is responsible for creating a server socket and listening for client connections.
+ * It also maintains a list of connected clients and broadcasts messages to all clients.
+ */
 class Server {
     Socket listener;
     // initialize collection of sockets to keep track of clients
@@ -18,6 +24,12 @@ class Server {
     // redo deque
     auto redoDeque = new Deque!(Packet);
 
+    /**
+     * Constructor
+     * @param host : host address to bind the server socket to
+     * @param port : port to bind the server socket to
+     * @param maxNoOfClients : maximum number of clients that can be connected to the server
+     */
     this(string host="localhost", ushort port=8000, int maxNoOfClients=3) {
         writeln("Starting server...");
 
@@ -35,6 +47,10 @@ class Server {
         this.listener.listen(this.maxNoOfClients);
     }
 
+    /**
+     * Destructor
+     * It closes the server socket and all client sockets.
+     */
     ~this() {
         // close server socket
         this.listener.shutdown(SocketShutdown.BOTH);
@@ -47,6 +63,9 @@ class Server {
         }
     }
 
+    /**
+     * This method is responsible for accepting client connections and running each client on a new thread.
+     */
     void run() {
         bool serverOnline = true;
         writeln("\nAwaiting client connections...");
@@ -77,6 +96,10 @@ class Server {
         }
     }
 
+    /**
+     * main logic to receive request and send response to clients.
+     * @param client: Socket
+     */
     void runClient(Socket client) {
         bool clientRunning = true;
         writeln("client ", client.toHash(), " thread started...");
@@ -121,6 +144,10 @@ class Server {
         }
     }
 
+    /**
+     * This method is responsible for disconnect a dropped client.
+     * @param client: Socket
+     */
     void disconnectClient(Socket client) {
         writeln("> client ", client.toHash(), " disconnected...");
         // close current client socket
@@ -139,6 +166,11 @@ class Server {
         }
     }
 
+    /**
+     * This method is responsible for sending all the previous updates to the client that just connected, but not the sender client.
+     * @param client: Socket
+     * @param clientMessage: clientMessage
+     */
     void syncClients(Socket client, scope const(void)[] clientMessage) {
         writeln("> client ", client.toHash(), " sent an update...");
 
@@ -154,6 +186,12 @@ class Server {
         writeln("... all clients synced");
     }
 
+    /**
+     * This method is responsible for sending all the previous updates to the client that just connected, including the sender client.
+     * @param client: Socket
+     * @param clientMessage: clientMessage
+     * 
+     */
     void syncAllClients(Socket client, scope const(void)[] clientMessage) {
                 writeln("> client ", client.toHash(), " sent an update...");
 
@@ -168,6 +206,11 @@ class Server {
         writeln("... all clients synced");
     }
 
+    /**
+     * Handles the undo command by popping the last packet from the deque, add it to redo deque and sending it to the client.
+     * @param client: Socket
+     * @param curPacket: Packet
+     */
     void handleUndo(Socket client, Packet curPacket) {
         if (this.dq.size() > 0) {
             Packet prePacket = this.dq.pop_back();
@@ -186,6 +229,11 @@ class Server {
         }
     }
 
+    /**
+     * This method is responsible for getting the index of the current client on the list of connected clients.
+     * @param client: Socket
+     * @return ulong: client index
+     */
     ulong getClientIdx(Socket client) {
         // linear search for current client
         foreach (i, Socket currClient ; this.connectedClientList) {
@@ -197,6 +245,11 @@ class Server {
         return -1;
     }
 
+    /**
+     * This method is responsible for fast-forwarding the client to the current state of the server.
+     * @param client: Socket
+     * 
+     */
     void fastForwardClient(Socket client) {
         writeln("> client ", client.toHash(),  " being fast-forwarded...");
 

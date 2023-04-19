@@ -1,6 +1,3 @@
-/// Run with: 'dub'
-
-// Import D standard libraries
 import std.stdio;
 import std.conv;
 import std.string;

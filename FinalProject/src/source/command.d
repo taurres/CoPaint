@@ -9,6 +9,10 @@ import constants;
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
 
+ /**
+  * Commands that are executed in SDLApp.
+  * Command contains methods for executing and unexecuting the command, and convertion between command and packet.
+  */
  interface Command {
     /**
      * Executes the command on the given surface.
@@ -26,16 +30,21 @@ import loader = bindbc.loader.sharedlib;
     Packet toPacket();
 
     /**
-      * Create a command from a packet.
-      */
+     * Create a command from a packet.
+     */
     static Command fromPacket(Packet packet) {
       if (packet.commandId == DRAW_COMMAND_ID) {
         return new DrawCommand(packet.x, packet.y, packet.brushSize, packet.r, packet.g, packet.b, packet.preR, packet.preG, packet.preB);
       } else if (packet.commandId == ERASE_COMMAND_ID) {
         return new EraseCommand(packet.x, packet.y, packet.brushSize);
       } else if (packet.commandId == UNDO_COMMAND_ID) {
-        //create a draw commad and send it to undo
-        DrawCommand preCommand = new DrawCommand(packet.x, packet.y, packet.brushSize, packet.r, packet.g, packet.b, packet.preR, packet.preG, packet.preB);
+        //pass the previous commad to undo
+        Command preCommand;
+        if(packet.commandId == ERASE_COMMAND_ID){
+          preCommand = new EraseCommand(packet.x, packet.y, packet.brushSize, packet.preR, packet.preG, packet.preB);
+        } else {
+          preCommand = new DrawCommand(packet.x, packet.y, packet.brushSize, packet.r, packet.g, packet.b, packet.preR, packet.preG, packet.preB);
+        }
         return new UndoCommand(preCommand); 
       } else if (packet.commandId == REDO_COMMAND_ID) {
         return new RedoCommand();
@@ -46,7 +55,7 @@ import loader = bindbc.loader.sharedlib;
     };
   }
 
-  //Update pixel class
+  ///Draw command to update color on canvas
   class DrawCommand : Command {
     int commandId = DRAW_COMMAND_ID;
     int xPos;
@@ -89,11 +98,11 @@ import loader = bindbc.loader.sharedlib;
     void unexecute(Surface* surface){
       for(int w=-brushSize; w < brushSize; w++){
           for(int h=-brushSize; h < brushSize; h++){
-              surface.UpdateSurfacePixel(xPos+w, yPos+h, preR, preG, preB);
+              // surface.UpdateSurfacePixel(xPos+w, yPos+h, preR, preG, preB);
+              surface.changePixel(xPos+w, yPos+h, preR, preG, preB);
           }
       }
     }
-    
 
     Packet toPacket() {
       Packet p;
@@ -112,6 +121,7 @@ import loader = bindbc.loader.sharedlib;
 
   }
 
+  ///Erase command to erase color on canvas
   class EraseCommand : Command {
     int commandId = ERASE_COMMAND_ID;
     int xPos;
@@ -142,7 +152,26 @@ import loader = bindbc.loader.sharedlib;
         preR = pixel.r;
         preG = pixel.g;
         preB = pixel.b;
-        surface.changePixel(xPos, yPos, r, g, b);
+        writeln("STUCCCKK");
+        writeln(preB);
+        writeln(preR);
+        writeln(preG);
+        // Loop through and update specific pixels
+        for(int w=-brushSize; w < brushSize; w++){
+            for(int h=-brushSize; h < brushSize; h++){
+                surface.changePixel(xPos+w, yPos+h, r, g, b);
+            }
+        }
+    }
+
+    void unexecute(Surface* surface){
+      writeln("here");
+        for(int w=-brushSize; w < brushSize; w++){
+          for(int h=-brushSize; h < brushSize; h++){
+              // surface.UpdateSurfacePixel(xPos+w, yPos+h, preR, preG, preB);
+              surface.changePixel(xPos+w, yPos+h, preR, preG, preB);
+          }
+      }
     }
 
     Packet toPacket() {
@@ -153,15 +182,20 @@ import loader = bindbc.loader.sharedlib;
       p.r = this.r;
       p.g = this.g;
       p.b = this.b;
+      writeln("TOPACK");
+      writeln(this.preB);
+      writeln(this.b);
+      p.preR = this.preR;
+      p.preG = this.preG;
+      p.preB = this.preB;
       p.brushSize = this.brushSize;
       return p;
     }
 
-    void unexecute(Surface* surface){
-        surface.changePixel(xPos, yPos, preR, preG, preB);
-    }
+    
   }
-
+  
+  ///Undo command to undo previous command
   class UndoCommand : Command {
     int commandId = UNDO_COMMAND_ID;
     Command prevCommand = null;
@@ -180,7 +214,9 @@ import loader = bindbc.loader.sharedlib;
         // preR = pixel.r;
         // preG = pixel.g;
         // preB = pixel.b;
+        writeln("Executing undo");
         prevCommand.unexecute(surface);
+        writeln("Done");
     }
 
     void unexecute(Surface* surface){
@@ -196,6 +232,7 @@ import loader = bindbc.loader.sharedlib;
     }
   }
 
+  ///Redo command to redo a command that was undone
   class RedoCommand : Command {
     int commandId = REDO_COMMAND_ID;
     
