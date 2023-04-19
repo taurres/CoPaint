@@ -7,19 +7,34 @@
   import loader = bindbc.loader.sharedlib;
   import command;
 
+  /**
+   * Struct of the surface. It contains the SDL_Surface and the functions to update the pixels.
+   */
   struct Surface{
     SDL_Surface* imgSurface;
 
+    /**
+     * Constructor
+     * Load the SDL library.
+     */
   	this(...) {
       loadSDL();
   		// Create a surface...
         imgSurface = SDL_CreateRGBSurface(0,640,480,32,0,0,0,0);
   	}
+
+    /**
+     * Destructor
+     * Free the SDL library.
+     */
   	~this(){
   		// Free a surface...
         SDL_FreeSurface(imgSurface);
   	}
 
+    /**
+     * Get SDL_Surface
+     */
      SDL_Surface* getSurface() {
         return imgSurface;
     }
@@ -27,17 +42,23 @@
     //command object
     Command command;
 
-    //set command: 
+    /**
+     * set the command to be executed
+     */
     void setCommand(Command command){
       this.command = command;
     }
 
+    /**
+     * execute the command
+     */
     void executeCommand(){
       command.execute(&this);
     }
 
-  	// Update a pixel ...
-  	// Function for updating the pixels in a surface to a 'blue-ish' color.
+  	/**
+     * Function for updating the pixels in a surface to a 'blue-ish' color.
+     */
     void UpdateSurfacePixel(int xPos, int yPos, ubyte r = 0, ubyte g = 0, ubyte b = 255){
         // When we modify pixels, we need to lock the surface first
         SDL_LockSurface(imgSurface);
@@ -54,7 +75,9 @@
         pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+2] = r;
     }
 
-  /* Changing pixel value for position (x,y) to the given r,g,b values. */
+   /**
+    * Changing pixel value for position (x,y) to the given r,g,b values.
+    */
    void changePixel(int x, int y, ubyte r, ubyte g, ubyte b) {
         SDL_LockSurface(imgSurface);
         // Make sure to unlock the surface when we are done.
@@ -70,7 +93,9 @@
     }
 
 
-    /* Fetching pixel's struct and r,g,b value at position (x,y). */
+    /** 
+     * Fetching pixel's struct and r,g,b value at position (x,y).
+     */
     SDL_Color pixelAt(int x, int y) {
         SDL_LockSurface(imgSurface); // Locking surface
         scope(exit){
