@@ -164,12 +164,12 @@ class SDLApp{
                         //UNDO
                         else if (e.key.keysym.sym == SDLK_z && (SDL_GetModState() & KMOD_LGUI) 
                             && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
-                            writeln("Call UNDO");
+                            debug writeln("Call UNDO");
                             Command undoCommand = new UndoCommand();
                             client.sendToServer(undoCommand);
                         }
                         // REDO
-                        else if (e.key.keysym.sym == SDLK_r && (SDL_GetModState() & KMOD_LGUI) 
+                        else if (e.key.keysym.sym == SDLK_y && (SDL_GetModState() & KMOD_LGUI) 
                             && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
                             Command redoCommand = new RedoCommand();
                             client.sendToServer(redoCommand);
@@ -179,6 +179,18 @@ class SDLApp{
                             && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
                             erase = erase? false:true;
                             writeln(erase);
+                        }
+                        // RED
+                        else if (e.key.keysym.sym == SDLK_r){
+                            debug writeln("red");
+                        }
+                        // GREEN
+                        else if (e.key.keysym.sym == SDLK_g){
+                            debug writeln("green");
+                        }
+                        // BLUE
+                        else if (e.key.keysym.sym == SDLK_b){
+                             debug writeln("blue");
                         }
                     }
                     // DRAW or ERASE
