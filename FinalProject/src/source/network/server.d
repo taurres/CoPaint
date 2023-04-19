@@ -70,12 +70,16 @@ class Server {
         bool serverOnline = true;
         writeln("\nAwaiting client connections...");
 
+        int clientId = 0;
+
         // start accepting client connections on main thread
         while (serverOnline) {
             auto newClient = this.listener.accept();
 
             if (this.connectedClientList.length < this.maxNoOfClients) {
-                newClient.send("... connected to the server. clientId : " ~ to!string(this.connectedClientList.length + 1));
+                clientId++;
+                clientId = clientId % this.maxNoOfClients != 0 ? clientId % this.maxNoOfClients : this.maxNoOfClients;
+                newClient.send("... connected to the server. clientId : " ~ to!string(clientId));
 
                 // add new client on the connected client list
                 this.connectedClientList ~= newClient;
