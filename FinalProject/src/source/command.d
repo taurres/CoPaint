@@ -152,10 +152,6 @@ import loader = bindbc.loader.sharedlib;
         preR = pixel.r;
         preG = pixel.g;
         preB = pixel.b;
-        writeln("STUCCCKK");
-        writeln(preB);
-        writeln(preR);
-        writeln(preG);
         // Loop through and update specific pixels
         for(int w=-brushSize; w < brushSize; w++){
             for(int h=-brushSize; h < brushSize; h++){
@@ -182,17 +178,12 @@ import loader = bindbc.loader.sharedlib;
       p.r = this.r;
       p.g = this.g;
       p.b = this.b;
-      writeln("TOPACK");
-      writeln(this.preB);
-      writeln(this.b);
       p.preR = this.preR;
       p.preG = this.preG;
       p.preB = this.preB;
       p.brushSize = this.brushSize;
       return p;
     }
-
-    
   }
   
   ///Undo command to undo previous command
@@ -214,9 +205,9 @@ import loader = bindbc.loader.sharedlib;
         // preR = pixel.r;
         // preG = pixel.g;
         // preB = pixel.b;
-        writeln("Executing undo");
+        debug writeln("Executing undo");
         prevCommand.unexecute(surface);
-        writeln("Done");
+        debug writeln("Done");
     }
 
     void unexecute(Surface* surface){
