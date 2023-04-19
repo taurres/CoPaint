@@ -221,15 +221,23 @@ class SDLApp{
                         // RED
                         else if (e.key.keysym.sym == SDLK_r){
                             debug writeln("current color : red");
-
+                            this.r = 255;
+                            this.g = 0;
+                            this.b = 0;
                         }
                         // GREEN
                         else if (e.key.keysym.sym == SDLK_g){
                             debug writeln("current color : green");
+                            this.r = 0;
+                            this.g = 255;
+                            this.b = 0;
                         }
                         // BLUE
                         else if (e.key.keysym.sym == SDLK_b){
-                             debug writeln("current color : blue");
+                            debug writeln("current color : blue");
+                            this.r = 0;
+                            this.g = 0;
+                            this.b = 255;
                         }
                     }
                     // DRAW or ERASE
