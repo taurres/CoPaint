@@ -4,7 +4,7 @@ import std.stdio;
 import std.exception;
 import core.exception : AssertError;
 
-/*
+/**
     The following is an interface for a Deque data structure.
     Generally speaking we call these containers.
 
@@ -12,32 +12,32 @@ import core.exception : AssertError;
     where 'T' is a placeholder for a data type.
 */
 interface Container(T){
-    // Element is on the front of collection
+    /// Element is on the front of collection
     void push_front(T x);
-    // Element is on the back of the collection
+    /// Element is on the back of the collection
     void push_back(T x);
-    // Element is removed from front and returned
-    // assert size > 0 before operation
+    /// Element is removed from front and returned
+    /// assert size > 0 before operation
     T pop_front();
-    // Element is removed from back and returned
-    // assert size > 0 before operation
+    /// Element is removed from back and returned
+    /// assert size > 0 before operation
     T pop_back();
-    // Retrieve reference to element at position at index
-    // assert pos is between [0 .. $] and size > 0
+    /// Retrieve reference to element at position at index
+    /// assert pos is between [0 .. $] and size > 0
     ref T at(size_t pos);
-    // Retrieve reference to element at back of position
-    // assert size > 0 before operation
+    /// Retrieve reference to element at back of position
+    /// assert size > 0 before operation
     ref T back();
-    // Retrieve element at front of position
-    // assert size > 0 before operation
+    /// Retrieve element at front of position
+    /// assert size > 0 before operation
     ref T front();
-    // Retrieve number of elements currently in container
+    /// Retrieve number of elements currently in container
     size_t size();
-    // clear all elements in container
+    /// clear all elements in container
     void clear();
 }
 
-/*
+/**
     A Deque is a double-ended queue in which we can push and
     pop elements.
 
