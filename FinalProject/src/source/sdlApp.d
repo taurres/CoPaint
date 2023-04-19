@@ -3,6 +3,7 @@ module sdlApp;
 // Import D standard libraries
 import std.stdio;
 import std.string;
+import std.conv;
 import surface;
 import command;
 
@@ -83,17 +84,21 @@ class SDLApp{
         bool erase = false;
         /// brush size on canvas
         int brushSize = 1;
+        // colors
+        ubyte r = 0;
+        ubyte g = 0;
+        ubyte b = 0;
 
         // change these to get inputs from GUI button clicks later
         void increase_brush(){
-            if (brushSize <= 50){
-                brushSize = brushSize + 1;
+            if (this.brushSize <= 50){
+                this.brushSize = this.brushSize + 1;
             }
         }
 
         void decrease_brush(){
-            if (brushSize > 1){
-                brushSize = brushSize - 1;
+            if (this.brushSize > 1){
+                this.brushSize = this.brushSize - 1;
             }
         }
 
@@ -101,6 +106,28 @@ class SDLApp{
             return this.brushSize;
         }
 
+        void setDefaultColor(int clientId) {
+            if (clientId == 1) {
+                this.r = 0;
+                this.g = 0;
+                this.b = 255;
+            }
+            else if (clientId == 2) {
+                this.r = 255;
+                this.g = 0;
+                this.b = 0;
+            }
+            else if (clientId == 3) {
+                this.r = 0;
+                this.g = 255;
+                this.b = 0;
+            }
+            else {
+                this.r = 255;
+                this.g = 255;
+                this.b = 255;
+            }
+        }
 
  		/// global variable for sdl;
 		const SDLSupport ret;
@@ -109,29 +136,40 @@ class SDLApp{
          * This method will handle the main application loop.
          */
  		void MainApplicationLoop(){
+            // Load the bitmap surface
+            Surface instance = Surface(1);
+
+            // start client
+            client = new Client(&instance);
+            client.run();
+
+            // get client id i.e. client's order in the queue
+            int clientId = client.getClientId();
+
+            // generate window name
+            char cId = cast(char) (clientId + '0');
+            string title = "Collaborative Painting | Client " ~ cId;
+            const(char)* windowName = title.ptr;
+
 			// Create an SDL window
-            SDL_Window* window= SDL_CreateWindow("D SDL Painting",
+            SDL_Window* window= SDL_CreateWindow(windowName,
                                         SDL_WINDOWPOS_UNDEFINED,
                                         SDL_WINDOWPOS_UNDEFINED,
                                         640,
                                         480,
                                         SDL_WINDOW_SHOWN);
 
-            // Load the bitmap surface
-            Surface instance = Surface(1);
-
             // Accessing imgSurface from surface struct
             SDL_Surface* imgSurface = instance.getSurface();
-
-            // start client
-            client = new Client(&instance);
-            client.run();
 
 			// Flag for determing if we are running the main application loop
             bool runApplication = true;
             // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
             //                                                but not yet released)
             bool drawing = false;
+
+            // set the client's default drawing color
+            setDefaultColor(clientId);
 
             // Main application loop that will run until a quit event has occurred.
             // This is the 'main graphics loop'
@@ -182,15 +220,16 @@ class SDLApp{
                         }
                         // RED
                         else if (e.key.keysym.sym == SDLK_r){
-                            debug writeln("red");
+                            debug writeln("current color : red");
+
                         }
                         // GREEN
                         else if (e.key.keysym.sym == SDLK_g){
-                            debug writeln("green");
+                            debug writeln("current color : green");
                         }
                         // BLUE
                         else if (e.key.keysym.sym == SDLK_b){
-                             debug writeln("blue");
+                             debug writeln("current color : blue");
                         }
                     }
                     // DRAW or ERASE
@@ -201,7 +240,7 @@ class SDLApp{
 
                         if(!erase) {
                             // create command
-                            Command updatePixel = new DrawCommand(xPos,yPos,this.brushSize);
+                            Command updatePixel = new DrawCommand(xPos, yPos, this.brushSize, this.r, this.g, this.b);
                             // execute command and send command to client
                             instance.setCommand(updatePixel);
                             instance.executeCommand();
@@ -213,7 +252,6 @@ class SDLApp{
                             instance.executeCommand();
                             client.sendToServer(eraseCommand);
                         }
-                        
                     }
                 }
 
@@ -229,5 +267,5 @@ class SDLApp{
 
             // Destroy our window
             SDL_DestroyWindow(window);
-		 }
+		}
  	}

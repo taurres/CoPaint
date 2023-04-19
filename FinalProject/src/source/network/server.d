@@ -2,6 +2,7 @@ module network.server;
 
 import std.stdio;
 import std.socket;
+import std.conv;
 import core.thread.osthread;
 import core.time;
 import network.deque;
@@ -74,7 +75,7 @@ class Server {
             auto newClient = this.listener.accept();
 
             if (this.connectedClientList.length < this.maxNoOfClients) {
-                newClient.send("... connected to the server");
+                newClient.send("... connected to the server. clientId : " ~ to!string(this.connectedClientList.length + 1));
 
                 // add new client on the connected client list
                 this.connectedClientList ~= newClient;
@@ -189,7 +190,7 @@ class Server {
      * This method is responsible for sending all the previous updates to the client that just connected, including the sender client.
      * @param client: Socket
      * @param clientMessage: clientMessage
-     * 
+     *
      */
     void syncAllClients(Socket client, scope const(void)[] clientMessage) {
                 writeln("> client ", client.toHash(), " sent an update...");
@@ -199,7 +200,6 @@ class Server {
             writeln("Sending update to client ", broadcastClient.toHash(),  "...");
             // send the current client's message to other clients
             broadcastClient.send(clientMessage.dup);
-            
         }
 
         writeln("... all clients synced");

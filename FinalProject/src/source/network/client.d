@@ -14,6 +14,7 @@ import surface;
 class Client {
     Socket socket;
     Surface* instance;
+    int clientId;
 
     /**
      * Constructor
@@ -50,8 +51,10 @@ class Client {
         byte[10240] buffer;
 
         // receive connection ACK from the server
-        writeln(cast(char[])(buffer[0 .. socket.receive(buffer)]));
-        write("> ");
+        auto serverAck = cast(char[])(buffer[0 .. socket.receive(buffer)]);
+        writeln(serverAck);
+        char cId = cast(char)(serverAck[serverAck.length - 1]);
+        this.clientId = cId - '0';
 
         // new thread for listening to server for syncs
         new Thread({
@@ -94,6 +97,10 @@ class Client {
                 instance.executeCommand();
             }
         }
+    }
+
+    int getClientId() {
+        return this.clientId;
     }
 
 }
