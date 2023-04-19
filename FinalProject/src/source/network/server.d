@@ -1,6 +1,7 @@
 module network.server;
 
 import std.stdio;
+import std.conv;
 import std.socket;
 import std.conv;
 import core.thread.osthread;
@@ -40,7 +41,7 @@ class Server {
 
         // assign socket to a address with a port
         this.listener.bind(new InternetAddress(host, port));
-        writeln("Server is listening on port 8000...");
+        writeln("Server is listening on port ", port);
 
         // enable socket to accept connections from another socket
         this.maxNoOfClients = maxNoOfClients;
@@ -267,7 +268,14 @@ class Server {
     }
 }
 
-void main() {
-    Server server = new Server();
+void main(string[] args) {
+    if (args.length != 4) {
+        writeln("Usage: ", args[0], "<hostname> <port> <maxNoOfClients>");
+        return;
+    }
+    string host = args[1]; 
+    ushort port = to!ushort(args[2]);
+    int maxNoOfClients = to!int(args[3]);
+    Server server = new Server(host, port, maxNoOfClients);
     server.run();
 }

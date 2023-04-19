@@ -102,6 +102,17 @@ class SDLApp{
             }
         }
 
+        //Boundary method: 
+        bool boundary_function(int xPos, int yPos, int xMin, int yMin, int xMax, int yMax){
+            if ((xMin < xPos) & (xPos < xMax)){
+                if ((yMin < yPos) & (yPos < yMax)){
+                    return true;
+                }
+            }
+            return false;
+
+        }
+
         int getBrushSize(){
             return this.brushSize;
         }
@@ -135,12 +146,12 @@ class SDLApp{
         /**
          * This method will handle the main application loop.
          */
- 		void MainApplicationLoop(){
+ 		void MainApplicationLoop(string host, ushort port) {
             // Load the bitmap surface
             Surface instance = Surface(1);
 
             // start client
-            client = new Client(&instance);
+            client = new Client(host, port, &instance);
             client.run();
 
             // get client id i.e. client's order in the queue
@@ -161,6 +172,8 @@ class SDLApp{
 
             // Accessing imgSurface from surface struct
             SDL_Surface* imgSurface = instance.getSurface();
+
+
 
 			// Flag for determing if we are running the main application loop
             bool runApplication = true;
@@ -245,20 +258,22 @@ class SDLApp{
                         // retrieve the position
                         int xPos = e.button.x;
                         int yPos = e.button.y;
+                        if (boundary_function(xPos, yPos, 1, 1, 639, 479) == true){
 
-                        if(!erase) {
-                            // create command
-                            Command updatePixel = new DrawCommand(xPos, yPos, this.brushSize, this.r, this.g, this.b);
-                            // execute command and send command to client
-                            instance.setCommand(updatePixel);
-                            instance.executeCommand();
-                            client.sendToServer(updatePixel);
-                        } else {
-                            writeln("ERASESEEEEEE");
-                            Command eraseCommand = new EraseCommand(xPos, yPos, this.brushSize);
-                            instance.setCommand(eraseCommand);
-                            instance.executeCommand();
-                            client.sendToServer(eraseCommand);
+                            if(!erase) {
+                                // create command
+                                Command updatePixel = new DrawCommand(xPos, yPos, this.brushSize, this.r, this.g, this.b);
+                                // execute command and send command to client
+                                instance.setCommand(updatePixel);
+                                instance.executeCommand();
+                                client.sendToServer(updatePixel);
+                            } else {
+                                writeln("ERASESEEEEEE");
+                                Command eraseCommand = new EraseCommand(xPos, yPos, this.brushSize);
+                                instance.setCommand(eraseCommand);
+                                instance.executeCommand();
+                                client.sendToServer(eraseCommand);
+                            }
                         }
                     }
                 }
