@@ -13,9 +13,19 @@ import network.client;
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
 
+/**
+ * SDLApp is a class that will handle the initialization of SDL and the main
+ * application loop. This class will also handle the creation of the SDL window
+ * and the SDL surface that will be used for drawing. It also brings up the client
+ * to connect to the server.
+ */
 class SDLApp{
     Client client;
 
+        /**
+         * Constructor
+         * This constructor will handle the initialization of SDL and the creation of the SDL window.
+         */
  		this(){
  			// Handle initialization...
  			// SDL_Init
@@ -55,22 +65,26 @@ class SDLApp{
             }
  		}
 
+        /**
+         * Destructor
+         * This destructor will handle the cleanup of SDL and the destruction of the SDL window.
+         */
  		~this(){
             // Quit the SDL Application
             SDL_Quit();
 	        writeln("Ending application--good bye!");
  		}
 
-        // Flag for determing if we are running the main application loop
+        /// Flag for determing if we are running the main application loop
         bool runApplication = true;
-        // Flag for determining if we are 'drawing' (i.e. mouse has been pressed
-        //                                                but not yet released)
+        /// Flag for determining if we are 'drawing' (i.e. mouse has been pressed but not yet released)
         bool drawing = false;
+        /// Flag for determining if we are erasing
         bool erase = false;
-
+        /// brush size on canvas
         int brushSize = 1;
 
-        //change these to get inputs from GUI button clicks later
+        // change these to get inputs from GUI button clicks later
         void increase_brush(){
             if (brushSize <= 50){
                 brushSize = brushSize + 1;
@@ -87,11 +101,13 @@ class SDLApp{
             return this.brushSize;
         }
 
- 		// Member variables like 'const SDLSupport ret'
- 		// liklely belong here.
- 		// global variable for sdl;
+
+ 		/// global variable for sdl;
 		const SDLSupport ret;
 
+        /**
+         * This method will handle the main application loop.
+         */
  		void MainApplicationLoop(){
 			// Create an SDL window
             SDL_Window* window= SDL_CreateWindow("D SDL Painting",

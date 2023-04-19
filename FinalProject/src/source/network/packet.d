@@ -3,6 +3,9 @@ module network.packet;
 import std.stdio;
 import core.stdc.string;
 
+/**
+ * A packet that is sent over the network
+ */
 struct Packet{
 	int commandId;
     int x;

@@ -1,6 +1,3 @@
-/// Run with: 'dub'
-
-// Import D standard libraries
 import std.stdio;
 import std.string;
 import sdlApp;
@@ -10,7 +7,7 @@ import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
 
 
-// Entry point to program
+/// Entry point to program
 void main()
 {
     SDLApp myApp = new SDLApp();

@@ -9,6 +9,10 @@ import constants;
 import bindbc.sdl;
 import loader = bindbc.loader.sharedlib;
 
+ /**
+  * Commands that are executed in SDLApp.
+  * Command contains methods for executing and unexecuting the command, and convertion between command and packet.
+  */
  interface Command {
     /**
      * Executes the command on the given surface.
@@ -26,8 +30,8 @@ import loader = bindbc.loader.sharedlib;
     Packet toPacket();
 
     /**
-      * Create a command from a packet.
-      */
+     * Create a command from a packet.
+     */
     static Command fromPacket(Packet packet) {
       if (packet.commandId == DRAW_COMMAND_ID) {
         return new DrawCommand(packet.x, packet.y, packet.brushSize, packet.r, packet.g, packet.b, packet.preR, packet.preG, packet.preB);
@@ -51,7 +55,7 @@ import loader = bindbc.loader.sharedlib;
     };
   }
 
-  //Update pixel class
+  ///Draw command to update color on canvas
   class DrawCommand : Command {
     int commandId = DRAW_COMMAND_ID;
     int xPos;
@@ -117,6 +121,7 @@ import loader = bindbc.loader.sharedlib;
 
   }
 
+  ///Erase command to erase color on canvas
   class EraseCommand : Command {
     int commandId = ERASE_COMMAND_ID;
     int xPos;
@@ -189,7 +194,8 @@ import loader = bindbc.loader.sharedlib;
 
     
   }
-
+  
+  ///Undo command to undo previous command
   class UndoCommand : Command {
     int commandId = UNDO_COMMAND_ID;
     Command prevCommand = null;
@@ -226,6 +232,7 @@ import loader = bindbc.loader.sharedlib;
     }
   }
 
+  ///Redo command to redo a command that was undone
   class RedoCommand : Command {
     int commandId = REDO_COMMAND_ID;
     
