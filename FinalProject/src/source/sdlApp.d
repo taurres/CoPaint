@@ -187,7 +187,7 @@ class SDLApp{
             //DRAW BUTTONS: 
             //drawButtons(instance);
             //INCREASE BRUSH SIZE
-            for(int i = 10; i < 100; i+=5){
+            for(int i = 10; i < 128; i+=5){
                 for(int j = 490; j < 515; j+=5){
                     // Loop through and update specific pixels
                     this.brushSize = 10;
@@ -227,7 +227,7 @@ class SDLApp{
             */
 
             //DECREASE
-            for(int i = 110; i < 200; i+=5){
+            for(int i = 138; i < 256; i+=5){
                 for(int j = 490; j < 515; j+=5){
                     // Loop through and update specific pixels
                     this.brushSize = 10;
@@ -240,7 +240,7 @@ class SDLApp{
                 }
             }
             //UNDO
-            for(int i = 210; i < 300; i+=5){
+            for(int i = 266; i < 384; i+=5){
                 for(int j = 490; j < 515; j+=5){
                     // Loop through and update specific pixels
                     this.brushSize = 10;
@@ -254,7 +254,7 @@ class SDLApp{
             }
 
             //REDO
-            for(int i = 310; i < 400; i+=5){
+            for(int i = 394; i < 512; i+=5){
                 for(int j = 490; j < 515; j+=5){
                     // Loop through and update specific pixels
                     this.brushSize = 10;
@@ -267,7 +267,7 @@ class SDLApp{
                 }
             }
             //ERASE
-            for(int i = 410; i < 500; i+=5){
+            for(int i = 522; i < 630; i+=5){
                 for(int j = 490; j < 515; j+=5){
                     // Loop through and update specific pixels
                     this.brushSize = 10;
@@ -311,22 +311,22 @@ class SDLApp{
                         xPos = e.button.x;
                         yPos = e.button.y;
 
-                        if(boundary_function(xPos, yPos, 0, 480, 100, 520)){
+                        if(boundary_function(xPos, yPos, 1, 480, 128, 520)){
                             increase_brush();
                         }
-                        else if(boundary_function(xPos, yPos, 100, 480, 200, 520)){
+                        else if(boundary_function(xPos, yPos, 129, 480, 256, 520)){
                             decrease_brush();
                         }
-                        else if(boundary_function(xPos, yPos, 200, 480, 300, 520)){
+                        else if(boundary_function(xPos, yPos, 257, 480, 384, 520)){
                             writeln("Call UNDO");
                             Command undoCommand = new UndoCommand();
                             client.sendToServer(undoCommand);
                         }
-                        else if(boundary_function(xPos, yPos, 300, 480, 400, 520)){
+                        else if(boundary_function(xPos, yPos, 385, 480, 512, 520)){
                             Command redoCommand = new RedoCommand();
                             client.sendToServer(redoCommand);
                         }
-                        else if(boundary_function(xPos, yPos, 400, 480, 500, 520)){
+                        else if(boundary_function(xPos, yPos, 513, 480, 639, 520)){
                             erase = erase? false:true;
                             writeln(erase);
                         }
