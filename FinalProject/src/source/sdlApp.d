@@ -303,6 +303,7 @@ class SDLApp{
                         }
                         else if (e.key.keysym.sym == SDLK_DOWN){
                             decrease_brush();
+                        }
                         //UNDO
                         else if (e.key.keysym.sym == SDLK_z && (SDL_GetModState() & KMOD_LGUI) 
                             && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
