@@ -23,6 +23,13 @@
 3. Next, in a new terminal, you can run the client by running the command `dub run -- localhost 8000` in the `FinalProject/src` directory.
 4. The user can create more clients by following the step 3.
 
+## Features of the paint application
+1. The users can draw on the paint application by drawing strokes using their mouse.
+2. The users can undo their actions.
+3. The users can redo their actions.
+4. Extra Feature: Users could pick from 3 color options available: red, blue and green.
+5. Extra Feature: The users can increase and decrease the thickness of their stroke by increasing or decreasing the brush size.
+6. Extra Feature: The users can erase their strokes.
 
 ## Using the application
 1. After setting up the application the clients can start to collaboratively draw on the canvas using the mouse.
@@ -38,3 +45,5 @@
 6. The users can erase their strokes by switching to erase mode. The user can switch to erase mode by pressing the keys `cmd + e` or clicking the white button on the bottom of the canvas. Once the user is done, they can toggle back to draw mode by pressing the keys `cmd + e` again or clicking the white button again.
 7. The user can undo their actions by pressing on the `cmd + z` keys simultaneously or clicking the purple button from the bottom panel in the canvas.
 8. The user can redo their undone actions by pressing on the `cmd + y` keys simultaneously or clicking the brown button from the bottom panel in the canvas.
+
+*_We initially wanted to use GTKD for a better user interface, but had difficulties implementing this as all of our group members were using mac silicon. We decided to use SDL itself to create the GUI, but ended up with a very simplistic GUI because to difficulties displaying images or text in SDL due to deprecated libraries_*
