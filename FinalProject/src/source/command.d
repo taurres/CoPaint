@@ -164,7 +164,6 @@ import loader = bindbc.loader.sharedlib;
       writeln("here");
         for(int w=-brushSize; w < brushSize; w++){
           for(int h=-brushSize; h < brushSize; h++){
-              // surface.UpdateSurfacePixel(xPos+w, yPos+h, preR, preG, preB);
               surface.changePixel(xPos+w, yPos+h, preR, preG, preB);
           }
       }
@@ -190,9 +189,6 @@ import loader = bindbc.loader.sharedlib;
   class UndoCommand : Command {
     int commandId = UNDO_COMMAND_ID;
     Command prevCommand = null;
-    // ubyte preR;
-    // ubyte preG;
-    // ubyte preB;
 
     this() {}
 
@@ -201,10 +197,6 @@ import loader = bindbc.loader.sharedlib;
     }
 
     void execute(Surface* surface) {
-        // SDL_Color pixel = surface.pixelAt(prevCommand.xPos,prevCommand.yPos);
-        // preR = pixel.r;
-        // preG = pixel.g;
-        // preB = pixel.b;
         debug writeln("Executing undo");
         prevCommand.unexecute(surface);
         debug writeln("Done");
@@ -216,9 +208,6 @@ import loader = bindbc.loader.sharedlib;
     Packet toPacket() {
       Packet p;
       p.commandId = this.commandId;
-      // p.preR = this.preR;
-      // p.preG = this.preG;
-      // p.preB = this.preB;
       return p;
     }
   }
