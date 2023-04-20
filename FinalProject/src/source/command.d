@@ -1,3 +1,4 @@
+module command;
 import std.stdio;
 import std.string;
 import network.deque;
