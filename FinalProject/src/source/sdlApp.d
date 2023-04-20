@@ -182,7 +182,7 @@ class SDLApp{
                     this.brushSize = 10;
                     for(int w=-brushSize; w < brushSize; w++){
                         for(int h=-brushSize; h < brushSize; h++){
-                            instance.changePixel(i+w, j+h, 152, 152, 152);
+                            instance.changePixel(i+w, j+h, 34, 34, 34);
                         }
                     }
                 }
@@ -194,7 +194,7 @@ class SDLApp{
                     this.brushSize = 10;
                     for(int w=-brushSize; w < brushSize; w++){
                         for(int h=-brushSize; h < brushSize; h++){
-                            instance.changePixel(i+w, j+h, 34, 34, 34);
+                            instance.changePixel(i+w, j+h, 152, 152, 152);
                         }
                     }
                 }
@@ -414,19 +414,21 @@ class SDLApp{
                         yPos = e.button.y;
                         if (boundary_function(xPos, yPos, 1, 1, 639, 479) == true){
                             if((this.brushSize + yPos) < 480){
-                                if(!erase) {
-                                    // create command
-                                    Command updatePixel = new DrawCommand(xPos, yPos, this.brushSize, this.r, this.g, this.b);
-                                    // execute command and send command to client
-                                    instance.setCommand(updatePixel);
-                                    instance.executeCommand();
-                                    client.sendToServer(updatePixel);
-                                } else {
-                                    writeln("ERASESEEEEEE");
-                                    Command eraseCommand = new EraseCommand(xPos, yPos, this.brushSize);
-                                    instance.setCommand(eraseCommand);
-                                    instance.executeCommand();
-                                    client.sendToServer(eraseCommand);
+                                if(((xPos - this.brushSize) > 0) & ((this.brushSize + xPos) < 639)){
+                                    if(!erase) {
+                                        // create command
+                                        Command updatePixel = new DrawCommand(xPos, yPos, this.brushSize, this.r, this.g, this.b);
+                                        // execute command and send command to client
+                                        instance.setCommand(updatePixel);
+                                        instance.executeCommand();
+                                        client.sendToServer(updatePixel);
+                                    } else {
+                                        writeln("ERASESEEEEEE");
+                                        Command eraseCommand = new EraseCommand(xPos, yPos, this.brushSize);
+                                        instance.setCommand(eraseCommand);
+                                        instance.executeCommand();
+                                        client.sendToServer(eraseCommand);
+                                    }
                                 }
 
                             }
