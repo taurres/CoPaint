@@ -175,33 +175,32 @@ class SDLApp{
 
 
             //DRAW BUTTONS: 
-            //drawButtons(instance);
             //INCREASE BRUSH SIZE
-            for(int i = 10; i < 128; i+=5){
+            for(int i = 10; i < 100; i+=5){
                 for(int j = 490; j < 515; j+=5){
                     // Loop through and update specific pixels
                     this.brushSize = 10;
                     for(int w=-brushSize; w < brushSize; w++){
                         for(int h=-brushSize; h < brushSize; h++){
-                            instance.changePixel(i+w, j+h, 255, 0, 0);
+                            instance.changePixel(i+w, j+h, 34, 34, 34);
                         }
                     }
                 }
             }
             //DECREASE
-            for(int i = 138; i < 256; i+=5){
+            for(int i = 100; i < 200; i+=5){
                 for(int j = 490; j < 515; j+=5){
                     // Loop through and update specific pixels
                     this.brushSize = 10;
                     for(int w=-brushSize; w < brushSize; w++){
                         for(int h=-brushSize; h < brushSize; h++){
-                            instance.changePixel(i+w, j+h, 37, 218, 49);
+                            instance.changePixel(i+w, j+h, 152, 152, 152);
                         }
                     }
                 }
             }
             //UNDO
-            for(int i = 266; i < 384; i+=5){
+            for(int i = 200; i < 300; i+=5){
                 for(int j = 490; j < 515; j+=5){
                     // Loop through and update specific pixels
                     this.brushSize = 10;
@@ -214,19 +213,19 @@ class SDLApp{
             }
 
             //REDO
-            for(int i = 394; i < 512; i+=5){
+            for(int i = 300; i < 400; i+=5){
                 for(int j = 490; j < 515; j+=5){
                     // Loop through and update specific pixels
                     this.brushSize = 10;
                     for(int w=-brushSize; w < brushSize; w++){
                         for(int h=-brushSize; h < brushSize; h++){
-                            instance.changePixel(i+w, j+h, 229, 169, 48);
+                            instance.changePixel(i+w, j+h, 145, 97, 1);
                         }
                     }
                 }
             }
             //ERASE
-            for(int i = 522; i < 630; i+=5){
+            for(int i = 400; i < 500; i+=5){
                 for(int j = 490; j < 515; j+=5){
                     // Loop through and update specific pixels
                     this.brushSize = 10;
@@ -238,6 +237,48 @@ class SDLApp{
 
                 }
             }
+            
+            ///RGB BUTTONS
+            //RED
+            for(int i = 500; i < 546; i+=5){
+                for(int j = 490; j < 515; j+=5){
+                    // Loop through and update specific pixels
+                    this.brushSize = 10;
+                    for(int w=-brushSize; w < brushSize; w++){
+                        for(int h=-brushSize; h < brushSize; h++){
+                            instance.changePixel(i+w, j+h, 255, 0, 0);
+                        }
+                    }
+
+                }
+            }
+            //GREEN
+            for(int i = 546; i < 593; i+=5){
+                for(int j = 490; j < 515; j+=5){
+                    // Loop through and update specific pixels
+                    this.brushSize = 10;
+                    for(int w=-brushSize; w < brushSize; w++){
+                        for(int h=-brushSize; h < brushSize; h++){
+                            instance.changePixel(i+w, j+h, 0, 255, 0);
+                        }
+                    }
+
+                }
+            }
+            //BLUE
+            for(int i = 593; i < 630; i+=5){
+                for(int j = 490; j < 515; j+=5){
+                    // Loop through and update specific pixels
+                    this.brushSize = 10;
+                    for(int w=-brushSize; w < brushSize; w++){
+                        for(int h=-brushSize; h < brushSize; h++){
+                            instance.changePixel(i+w, j+h, 0, 0, 255);
+                        }
+                    }
+
+                }
+            }
+            
 
             this.brushSize = 1;
 
@@ -273,24 +314,45 @@ class SDLApp{
                         xPos = e.button.x;
                         yPos = e.button.y;
 
-                        if(boundary_function(xPos, yPos, 1, 480, 128, 520)){
+                        if(boundary_function(xPos, yPos, 1, 480, 100, 520)){
                             increase_brush();
                         }
-                        else if(boundary_function(xPos, yPos, 129, 480, 256, 520)){
+                        else if(boundary_function(xPos, yPos, 101, 480, 200, 520)){
                             decrease_brush();
                         }
-                        else if(boundary_function(xPos, yPos, 257, 480, 384, 520)){
+                        else if(boundary_function(xPos, yPos, 201, 480, 300, 520)){
                             writeln("Call UNDO");
                             Command undoCommand = new UndoCommand();
                             client.sendToServer(undoCommand);
                         }
-                        else if(boundary_function(xPos, yPos, 385, 480, 512, 520)){
+                        else if(boundary_function(xPos, yPos, 301, 480, 400, 520)){
                             Command redoCommand = new RedoCommand();
                             client.sendToServer(redoCommand);
                         }
-                        else if(boundary_function(xPos, yPos, 513, 480, 639, 520)){
+                        else if(boundary_function(xPos, yPos, 401, 480, 500, 520)){
                             erase = erase? false:true;
                             writeln(erase);
+                        }
+                        else if(boundary_function(xPos, yPos, 501, 480, 546, 520)){
+                            //red
+                            debug writeln("current color : red");
+                            this.r = 255;
+                            this.g = 0;
+                            this.b = 0;
+                        }
+                        else if(boundary_function(xPos, yPos, 546, 480, 593, 520)){
+                            //green
+                            debug writeln("current color : green");
+                            this.r = 0;
+                            this.g = 255;
+                            this.b = 0;
+                        }
+                        else if(boundary_function(xPos, yPos, 593, 480, 639, 520)){
+                            //blue
+                            debug writeln("current color : blue");
+                            this.r = 0;
+                            this.g = 0;
+                            this.b = 255;
                         }
                     }
                     else if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT){
@@ -351,7 +413,26 @@ class SDLApp{
                         xPos = e.button.x;
                         yPos = e.button.y;
                         if (boundary_function(xPos, yPos, 1, 1, 639, 479) == true){
+                            if((this.brushSize + yPos) < 480){
+                                if(((xPos - this.brushSize) > 0) & ((this.brushSize + xPos) < 639)){
+                                    if(!erase) {
+                                        // create command
+                                        Command updatePixel = new DrawCommand(xPos, yPos, this.brushSize, this.r, this.g, this.b);
+                                        // execute command and send command to client
+                                        instance.setCommand(updatePixel);
+                                        instance.executeCommand();
+                                        client.sendToServer(updatePixel);
+                                    } else {
+                                        writeln("ERASESEEEEEE");
+                                        Command eraseCommand = new EraseCommand(xPos, yPos, this.brushSize);
+                                        instance.setCommand(eraseCommand);
+                                        instance.executeCommand();
+                                        client.sendToServer(eraseCommand);
+                                    }
+                                }
 
+                            }
+                            /**
                             if(!erase) {
                                 // create command
                                 Command updatePixel = new DrawCommand(xPos, yPos, this.brushSize, this.r, this.g, this.b);
@@ -366,6 +447,7 @@ class SDLApp{
                                 instance.executeCommand();
                                 client.sendToServer(eraseCommand);
                             }
+                            */
                         }
                     }
                 }
