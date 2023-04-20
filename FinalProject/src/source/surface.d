@@ -20,7 +20,7 @@
   	this(...) {
       loadSDL();
   		// Create a surface...
-        imgSurface = SDL_CreateRGBSurface(0,640,480,32,0,0,0,0);
+        imgSurface = SDL_CreateRGBSurface(0,640,520,32,0,0,0,0);
   	}
 
     /**

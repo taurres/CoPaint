@@ -167,12 +167,79 @@ class SDLApp{
                                         SDL_WINDOWPOS_UNDEFINED,
                                         SDL_WINDOWPOS_UNDEFINED,
                                         640,
-                                        480,
+                                        520,
                                         SDL_WINDOW_SHOWN);
 
             // Accessing imgSurface from surface struct
             SDL_Surface* imgSurface = instance.getSurface();
 
+
+            //DRAW BUTTONS: 
+            //drawButtons(instance);
+            //INCREASE BRUSH SIZE
+            for(int i = 10; i < 128; i+=5){
+                for(int j = 490; j < 515; j+=5){
+                    // Loop through and update specific pixels
+                    this.brushSize = 10;
+                    for(int w=-brushSize; w < brushSize; w++){
+                        for(int h=-brushSize; h < brushSize; h++){
+                            instance.changePixel(i+w, j+h, 255, 0, 0);
+                        }
+                    }
+                }
+            }
+            //DECREASE
+            for(int i = 138; i < 256; i+=5){
+                for(int j = 490; j < 515; j+=5){
+                    // Loop through and update specific pixels
+                    this.brushSize = 10;
+                    for(int w=-brushSize; w < brushSize; w++){
+                        for(int h=-brushSize; h < brushSize; h++){
+                            instance.changePixel(i+w, j+h, 37, 218, 49);
+                        }
+                    }
+                }
+            }
+            //UNDO
+            for(int i = 266; i < 384; i+=5){
+                for(int j = 490; j < 515; j+=5){
+                    // Loop through and update specific pixels
+                    this.brushSize = 10;
+                    for(int w=-brushSize; w < brushSize; w++){
+                        for(int h=-brushSize; h < brushSize; h++){
+                            instance.changePixel(i+w, j+h, 162, 108, 255);
+                        }
+                    }
+                }
+            }
+
+            //REDO
+            for(int i = 394; i < 512; i+=5){
+                for(int j = 490; j < 515; j+=5){
+                    // Loop through and update specific pixels
+                    this.brushSize = 10;
+                    for(int w=-brushSize; w < brushSize; w++){
+                        for(int h=-brushSize; h < brushSize; h++){
+                            instance.changePixel(i+w, j+h, 229, 169, 48);
+                        }
+                    }
+                }
+            }
+            //ERASE
+            for(int i = 522; i < 630; i+=5){
+                for(int j = 490; j < 515; j+=5){
+                    // Loop through and update specific pixels
+                    this.brushSize = 10;
+                    for(int w=-brushSize; w < brushSize; w++){
+                        for(int h=-brushSize; h < brushSize; h++){
+                            instance.changePixel(i+w, j+h, 255, 255, 255);
+                        }
+                    }
+
+                }
+            }
+
+            this.brushSize = 1;
 
 
 			// Flag for determing if we are running the main application loop
@@ -187,6 +254,9 @@ class SDLApp{
             // Main application loop that will run until a quit event has occurred.
             // This is the 'main graphics loop'
             while(runApplication){
+                int xPos;
+                int yPos;
+
                 SDL_Event e;
                 // Handle events
                 // Events are pushed into an 'event queue' internally in SDL, and then
@@ -200,22 +270,43 @@ class SDLApp{
                     }
                     else if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT){
                         drawing=true;
-                    }else if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT){
+                        xPos = e.button.x;
+                        yPos = e.button.y;
+
+                        if(boundary_function(xPos, yPos, 1, 480, 128, 520)){
+                            increase_brush();
+                        }
+                        else if(boundary_function(xPos, yPos, 129, 480, 256, 520)){
+                            decrease_brush();
+                        }
+                        else if(boundary_function(xPos, yPos, 257, 480, 384, 520)){
+                            writeln("Call UNDO");
+                            Command undoCommand = new UndoCommand();
+                            client.sendToServer(undoCommand);
+                        }
+                        else if(boundary_function(xPos, yPos, 385, 480, 512, 520)){
+                            Command redoCommand = new RedoCommand();
+                            client.sendToServer(redoCommand);
+                        }
+                        else if(boundary_function(xPos, yPos, 513, 480, 639, 520)){
+                            erase = erase? false:true;
+                            writeln(erase);
+                        }
+                    }
+                    else if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT){
                         drawing=false;
                     }
                     // BRUSHSIZE
                     else if(e.type == SDL_KEYDOWN){
-                        // writeln("Debug: e", e.key.keysym.sym);
                         if (e.key.keysym.sym == SDLK_UP){
                             increase_brush();
                         }
                         else if (e.key.keysym.sym == SDLK_DOWN){
                             decrease_brush();
-                        }
                         //UNDO
                         else if (e.key.keysym.sym == SDLK_z && (SDL_GetModState() & KMOD_LGUI) 
                             && (e.key.keysym.mod & KMOD_LGUI || e.key.keysym.mod & KMOD_RGUI)){
-                            debug writeln("Call UNDO");
+                            writeln("Call UNDO");
                             Command undoCommand = new UndoCommand();
                             client.sendToServer(undoCommand);
                         }
@@ -256,8 +347,8 @@ class SDLApp{
                     // DRAW or ERASE
                     else if(e.type == SDL_MOUSEMOTION && drawing){
                         // retrieve the position
-                        int xPos = e.button.x;
-                        int yPos = e.button.y;
+                        xPos = e.button.x;
+                        yPos = e.button.y;
                         if (boundary_function(xPos, yPos, 1, 1, 639, 479) == true){
 
                             if(!erase) {
