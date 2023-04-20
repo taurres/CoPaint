@@ -3,6 +3,7 @@ import network.client;
 import surface:Surface;
 import std.socket;
 import std.conv;
+import core.thread.osthread;
 
 class MockServer {
     Socket listener;
@@ -53,13 +54,13 @@ class MockServer {
      * This method is responsible for accepting client connections and running each client on a new thread.
      */
     void run() {
-        bool serverOnline = true;
+        bool serverOnline = false;
         writeln("\nAwaiting client connections...");
 
         int clientId = 0;
 
         // start accepting client connections on main thread
-        while (serverOnline && this.connectedClientList.length < this.maxNoOfClients) {
+        while (this.connectedClientList.length < this.maxNoOfClients) {
             auto newClient = this.listener.accept();
 
             if (this.connectedClientList.length < this.maxNoOfClients) {
@@ -85,13 +86,15 @@ class MockServer {
 unittest {
     // init
     string host = "localhost";
-    ushort port = 6000;
+    ushort port = 5050;
     int maxNoOfClients = 3;
     Surface instance = Surface(1);
 
     // start the server
-    // MockServer server = new MockServer(host, port, maxNoOfClients);
-    // server.run();
+    MockServer server = new MockServer(host, port, maxNoOfClients);
+    new Thread({
+            server.run();
+        }).start();
 
     // start a client
     Client first_client = new Client(host, port, &instance);
@@ -115,5 +118,5 @@ unittest {
     second_client.close();
     third_client.close();
 
-    // destroy(server);
+    server.destroy();
 }
