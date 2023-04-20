@@ -12,7 +12,7 @@ import constants;
 
 /**
  * Server class
- * 
+ *
  * This class is responsible for creating a server socket and listening for client connections.
  * It also maintains a list of connected clients and broadcasts messages to all clients.
  */
@@ -21,6 +21,7 @@ class Server {
     // initialize collection of sockets to keep track of clients
     Socket[] connectedClientList;
     int maxNoOfClients;
+    // command history deque
     auto dq = new Deque!(Packet);
     // redo deque
     auto redoDeque = new Deque!(Packet);
@@ -252,7 +253,6 @@ class Server {
     /**
      * This method is responsible for fast-forwarding the client to the current state of the server.
      * @param client: Socket
-     * 
      */
     void fastForwardClient(Socket client) {
         writeln("> client ", client.toHash(),  " being fast-forwarded...");
@@ -267,6 +267,7 @@ class Server {
         writeln("> client ", client.toHash(),  " all catched up...");
     }
 }
+
 
 void main(string[] args) {
     if (args.length != 4) {

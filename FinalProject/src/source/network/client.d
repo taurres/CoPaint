@@ -99,6 +99,9 @@ class Client {
         }
     }
 
+    /**
+     * This method is responsible for getting assigned ID to a client
+     */
     int getClientId() {
         return this.clientId;
     }
