@@ -1,3 +1,4 @@
+  module surface;
   // Import D standard libraries
   import std.stdio;
   import std.string;
@@ -5,43 +6,79 @@
   // Load the SDL2 library
   import bindbc.sdl;
   import loader = bindbc.loader.sharedlib;
+  import command;
 
+  /**
+   * Struct of the surface. It contains the SDL_Surface and the functions to update the pixels.
+   */
   struct Surface{
     SDL_Surface* imgSurface;
 
+    /**
+     * Constructor
+     * Load the SDL library.
+     */
   	this(...) {
       loadSDL();
   		// Create a surface...
-        imgSurface = SDL_CreateRGBSurface(0,640,480,32,0,0,0,0);
+        imgSurface = SDL_CreateRGBSurface(0,640,520,32,0,0,0,0);
   	}
+
+    /**
+     * Destructor
+     * Free the SDL library.
+     */
   	~this(){
   		// Free a surface...
         SDL_FreeSurface(imgSurface);
   	}
 
-    SDL_Surface* getSurface() {
+    /**
+     * Get SDL_Surface
+     */
+     SDL_Surface* getSurface() {
         return imgSurface;
     }
 
-  	// Update a pixel ...
-  	// Function for updating the pixels in a surface to a 'blue-ish' color.
-    void UpdateSurfacePixel(SDL_Surface* surface, int xPos, int yPos){
-        // When we modify pixels, we need to lock the surface first
-        SDL_LockSurface(surface);
-        // Make sure to unlock the surface when we are done.
-        scope(exit) SDL_UnlockSurface(surface);
+    //command object
+    Command command;
 
-        // Retrieve the pixel arraay that we want to modify
-        ubyte* pixelArray = cast(ubyte*)surface.pixels;
-        // Change the 'blue' component of the pixels
-        pixelArray[yPos*surface.pitch + xPos*surface.format.BytesPerPixel+0] = 255;
-        // Change the 'green' component of the pixels
-        pixelArray[yPos*surface.pitch + xPos*surface.format.BytesPerPixel+1] = 128;
-        // Change the 'red' component of the pixels
-        pixelArray[yPos*surface.pitch + xPos*surface.format.BytesPerPixel+2] = 32;
+    /**
+     * set the command to be executed
+     */
+    void setCommand(Command command){
+      this.command = command;
     }
 
-  /* Changing pixel value for position (x,y) to the given r,g,b values. */
+    /**
+     * execute the command
+     */
+    void executeCommand(){
+      command.execute(&this);
+    }
+
+  	/**
+     * Function for updating the pixels in a surface to a 'blue-ish' color.
+     */
+    void UpdateSurfacePixel(int xPos, int yPos, ubyte r = 0, ubyte g = 0, ubyte b = 255){
+        // When we modify pixels, we need to lock the surface first
+        SDL_LockSurface(imgSurface);
+        // Make sure to unlock the surface when we are done.
+        scope(exit) SDL_UnlockSurface(imgSurface);
+
+        // Retrieve the pixel arraay that we want to modify
+        ubyte* pixelArray = cast(ubyte*)imgSurface.pixels;
+        // Change the 'blue' component of the pixels
+        pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+0] = b;
+        // Change the 'green' component of the pixels
+        pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+1] = g;
+        // Change the 'red' component of the pixels
+        pixelArray[yPos*imgSurface.pitch + xPos*imgSurface.format.BytesPerPixel+2] = r;
+    }
+
+   /**
+    * Changing pixel value for position (x,y) to the given r,g,b values.
+    */
    void changePixel(int x, int y, ubyte r, ubyte g, ubyte b) {
         SDL_LockSurface(imgSurface);
         // Make sure to unlock the surface when we are done.
@@ -57,7 +94,9 @@
     }
 
 
-    /* Fetching pixel's struct and r,g,b value at position (x,y). */
+    /** 
+     * Fetching pixel's struct and r,g,b value at position (x,y).
+     */
     SDL_Color pixelAt(int x, int y) {
         SDL_LockSurface(imgSurface); // Locking surface
         scope(exit){

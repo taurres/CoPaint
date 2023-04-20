@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>Client (network.client.Client)</title>
+	<meta charset="utf-8" />
+	<meta content="width=device-width, initial-scale=1" name="viewport" />
+        <link href="style.css" rel="stylesheet" />
+        <script src="script.js" type="text/javascript"></script>
+
+	
+	<link href="search-results.html" rel="prefetch" />
+</head>
+<body>
+	<div id="page-header">
+		<div id="logotype">
+		<span>Documentation</span>
+		<nav>
+			<a href="http://dlang.org/">Dlang.org</a>
+		</nav>
+		</div>
+
+		<form action="search-docs.html" id="search">
+			<input name="searchTerm" placeholder="Find a symbol name..." type="search" />
+			<input type="submit" value="Go" />
+		</form>
+	</div>
+	<div id="page-body">
+		<div id="page-content">
+		<h1>Client</h1><div class="breadcrumbs"><a class="breadcrumb" href="network.html">network</a> <a class="breadcrumb" href="network.client.html">client</a> </div><div><div class="documentation-comment synopsis"><div><p>Client class
+This class is responsible for creating a client socket, sending requests to server and listening for server responses.</p></div></div></div><div class="annotated-prototype"><div class="aggregate-prototype"><div class="attributes"></div><span class="builtin-type">class</span> Client  {<div class="aggregate-member"><div class="attributes"></div><tt class="highlighted"><span class="hid">Socket</span></tt> <span class="name">socket</span>;</div><div class="aggregate-member"><div class="attributes"></div><tt class="highlighted"><span class="hid">Surface</span>*</tt> <span class="name">instance</span>;</div><div class="aggregate-member"><div class="attributes"></div><tt class="highlighted"><span class="type">int</span></tt> <span class="name">clientId</span>;</div><div class="aggregate-member"><a href="network.client._Client.this.html"><span class="lang-feature name">this</span>(string host, ushort port, Surface* instance);</a></div><div class="aggregate-member"><a href="network.client._Client.~this.html"><span class="lang-feature name">~this</span>();</a></div><div class="aggregate-member"><a href="network.client._Client.run.html"><tt class="highlighted"><span class="type">void</span></tt> <span class="name">run</span>();</a></div><div class="aggregate-member"><a href="network.client._Client.close.html"><tt class="highlighted"><span class="type">void</span></tt> <span class="name">close</span>();</a></div><div class="aggregate-member"><a href="network.client._Client.send_To_Server.html"><tt class="highlighted"><span class="type">void</span></tt> <span class="name">sendToServer</span>(Command command);</a></div><div class="aggregate-member"><a href="network.client._Client.listen_For_Syncs.html"><tt class="highlighted"><span class="type">void</span></tt> <span class="name">listenForSyncs</span>(Socket socket, byte[] buffer);</a></div><div class="aggregate-member"><a href="network.client._Client.get_Client_Id.html"><tt class="highlighted"><span class="type">int</span></tt> <span class="name">getClientId</span>();</a></div>}</div></div><h2 id="constructors"><a class="header-anchor" href="#constructors">Constructors</a></h2><dl class="member-list constructors"><dt><a href="network.client._Client.this.html">this</a><div class="simplified-prototype" style="max-width: 53ch;"><span class="lang-feature name">this</span>(string host, ushort port, Surface* instance)</div></dt><dd><div><p>Constructor
+@param instance : Surface instance
+@param host : server host
+@param port : server port</p></div></dd></dl><h2 id="destructor"><a class="header-anchor" href="#destructor">Destructor</a></h2><dl class="member-list"><dt><a href="network.client._Client.~this.html">~this</a><div class="simplified-prototype" style="max-width: 7ch;"><span class="lang-feature name">~this</span>()</div></dt><dd><div><p>Destructor
+close client socket</p></div></dd></dl><h2 id="members"><a class="header-anchor" href="#members">Members</a></h2><h3 class="member-list-header hide-from-toc" id="function"><a class="header-anchor" href="#function">Functions</a></h3><dl class="member-list native"><dt><a href="network.client._Client.close.html">close</a><div class="simplified-prototype" style="max-width: 13ch;"><tt class="highlighted"><span class="type">void</span></tt> <span class="name">close</span>()</div></dt><dd><div><p>This method is responsible for closing client socket</p></div></dd><dt><a href="network.client._Client.get_Client_Id.html">getClientId</a><div class="simplified-prototype" style="max-width: 18ch;"><tt class="highlighted"><span class="type">int</span></tt> <span class="name">getClientId</span>()</div></dt><dd><div><p>This method is responsible for getting assigned ID to a client</p></div></dd><dt><a href="network.client._Client.listen_For_Syncs.html">listenForSyncs</a><div class="simplified-prototype" style="max-width: 53ch;"><tt class="highlighted"><span class="type">void</span></tt> <span class="name">listenForSyncs</span>(Socket socket, byte[] buffer)</div></dt><dd><div><p>This method is responsible for listening to server for syncs
+@param socket : client socket
+@param buffer : buffer to pass data between client and server</p></div></dd><dt><a href="network.client._Client.run.html">run</a><div class="simplified-prototype" style="max-width: 11ch;"><tt class="highlighted"><span class="type">void</span></tt> <span class="name">run</span>()</div></dt><dd><div><p>This method is responsible for sending connection ACK to the server and listening for server syncs</p></div></dd><dt><a href="network.client._Client.send_To_Server.html">sendToServer</a><div class="simplified-prototype" style="max-width: 37ch;"><tt class="highlighted"><span class="type">void</span></tt> <span class="name">sendToServer</span>(Command command)</div></dt><dd><div><p>This method is responsible for sending commands to the server
+@param command : command to be sent to the server</p></div></dd></dl><div></div></div>
+		<div id="page-nav"><a class="parent" href="network.html">network</a> <a class="parent" href="network.client.html">client</a> 
+		<span class="type-separator">classes</span><ul><li><a class="class current" href="network.client._Client.html">Client</a></li></ul></div>
+	</div>
+	<div id="page-footer">Page generated by <a href="https://github.com/adamdruppe/adrdox">adrdox</a></div>
+</body>
+</html>
