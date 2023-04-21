@@ -1,164 +1,49 @@
-<img src="./media/banner.png" alt="banner" />
+# Paint application
 
-# Final Project!
+## Installing and setting up dub
+- The **releases** for Dub are hosted here: https://github.com/dlang/dub/releases
+	- You can scroll down and click 'Assets' and you should find an archive file for your operating system
+- Dub installed through operating system package managers
+	- Linux:
+		- For folks who installed dmd, you should already have dub.
+		- Otherwise, you can try `sudo apt-get install dub` 
+	- Mac:
+		- If Mac users were unable to install through the 'releases' on github, then you can try:
+		- Installing https://brew.sh/ - a package manager for Mac that you use on the terminal.
+		- Then try `brew install dub` on the command line (and wait a few seconds or minutes to install)
+		- Note: Some Mac users may get errors and need to run: `export MACOSX_DEPLOYMENT_TARGET=11` before running dub.
+	- Window: 
+		- It is also likely that if you setup dmd, you should be able to use dub from the terminal as well.
+		- Windows folks should be able to install from the zip file and the releases if they otherwise do not have dub available.
+- To know more about creating a project using dub and bindbc-sdl [this](https://github.com/Spring23FSE/monorepo-gokriznastic/tree/main/Assignment5_Dub_Patterns/warmup) resource can be referred.
 
-## The Final Project Repository!
+## Setting up the paint application
+1. User must clone the application from the github repository given [here](https://github.com/Spring23FSE/finalproject-d-evelopers).
+2. Next the user must open a terminal and navigate to `FinalProject/src/source` directory in the project and run the server and specify the hostname, port number and the maximum number of clients using the command: `rdmd network/server.d localhost 8000 3`.
+3. Next, in a new terminal, you can run the client by running the command `dub run -- localhost 8000` in the `FinalProject/src` directory.
+4. The user can create more clients by following the step 3.
 
-Welcome to the final project repository!  
+## Features of the paint application
+1. The users can draw on the paint application by drawing strokes using their mouse.
+2. The users can undo their actions.
+3. The users can redo their actions.
+4. Extra Feature: Users could pick from 3 color options available: red, blue and green.
+5. Extra Feature: The users can increase and decrease the thickness of their stroke by increasing or decreasing the brush size.
+6. Extra Feature: The users can erase their strokes.
 
-Here is a welcome video showing the repoisory organization--be sure to read carefully through the instructions (Consuming a large spec and breaking it down is part of engineering!).
+## Using the application
+1. After setting up the application the clients can start to collaboratively draw on the canvas using the mouse.
+2. Every time a new client joins, their default color is different. i.e. for eg. when client 1 joins their default color of the brush is blue, when client 2 joins their default color of the brush will be set to red and when the client 3 joins their default color is set to green. Even though all clients are assigned a different color, they can switch to a different color whenever they wish to as explained below.
+3. The user can draw strokes using their mouse.
+4. The user can change the colors of the strokes by pressing the r,g,b keys on the keyboard or by clicking on the red, blue or green buttons from the bottom panel on the canvas. 
+    - Pressing the key `r` or clicking the red button changes the color of the new strokes to red.
+    - Pressing the key `g` or clicking the green button changes the color of the new strokes to green.
+    - Pressing the key `b` or clicking the blue button changes the color of the new strokes to blue.
+5. The user can change the brush size by pressing the up and down arrow keys from the keyboard or clicking the dark or light grey buttons from the canvas.
+    - Pressing the `up arrow` key or clicking the dark grey button increases the size of the brush.
+    - Pressing the `down arrow` key or clicking the light grey button decreases the size of the brush.
+6. The users can erase their strokes by switching to erase mode. The user can switch to erase mode by pressing the keys `cmd + e` or clicking the white button on the bottom of the canvas. Once the user is done, they can toggle back to draw mode by pressing the keys `cmd + e` again or clicking the white button again.
+7. The user can undo their actions by pressing on the `cmd + z` keys simultaneously or clicking the purple button from the bottom panel in the canvas.
+8. The user can redo their undone actions by pressing on the `cmd + y` keys simultaneously or clicking the brown button from the bottom panel in the canvas.
 
-<a href="https://youtu.be/F0XVOL1zQHM">
-<img src="./media/FinalProject.png" alt="Click for final project video" width="300">
-</a>
-
-https://youtu.be/F0XVOL1zQHM
-
-
-## Repository Organization 
-
-1. There are no more individual assignments.
-2. You will complete your final project in the [final project directory](./FinalProject). The organization is partially up to you on the file structure and organization, just make sure you organize it logically and against any requirements.
-
-## Team
-
-**Team Name**: D-evelopers
-
-Team member Names:
-
-1. Cauviya Selva
-2. Muskaan Nandu
-3. Gopal Krishna
-4. Jiaxi Wen
-
-
-# Team spread sheet 
-
-- Your team members and project manager are listed on the following spreadsheet [here](https://docs.google.com/spreadsheets/d/1Z81Es6K-AAlTdzFNmQA32MbcQVekF6jEHnhKCKACF2w/edit?usp=sharing). 
-- Your project manager will be your first point of contact for various project deliverables and questions. Though you may continue to attend office hours with whoever you like, your project manager will be your primary contact.
-
-## Team Logistics
-
-- Work with your team to ensure everyone has a way to work on this codebase with a common set of tools.
-- Everyone should make code contributions to the repository (i.e. everyone should have some commits in the commit history -- even if you pair program, that means you need to switch who is in control!)
-- See the project timeline
-- Note: In semesters where I have a 'token system' for late days, **you cannot use any tokens** for the final project.
-
-## Notes on working in teams
-
-* [Four Ways to Lead Your Software Team to Success](https://hackernoon.com/four-ways-to-lead-software-team-to-success-43fa156719b4)
-* [The 3 C's of being a captain](https://appliedsportpsych.org/resources/resources-for-athletes/the-3-c-s-of-being-a-captain/)
-* [Etiquette for Pair Programming](https://dzone.com/articles/etiquette-for-pair-programming)
-
-# Rubric
- 
-<table>
-	<tbody>
-		<tr>
-			<th>Points</th>
-			<th align="center">Description</th>
-			</tr>
-			<tr>	  
-			<td>10% (Milestone Check-in #1)</td>
-				<td align="left">
-					<ul><li>Did you complete your check-in #1?</li><li>Was a timeline present?</li><li>Were there at least 10 asks created in the 'Projects' tab</li></ul>
-				</td>
-		</tr>
-	</tbody>
-</table>
-
-<table>
-	<tbody>
-		<tr>
-			<th>Points</th>
-			<th align="center">Description</th>
-			</tr>
-			<tr>	  
-			<td>10% (Milestone Check-in #2)</td>
-			<td align="left">
-				<ul><li>Did you complete your check-in #2?</li>
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-
-<table>
-	<tbody>
-		<tr>
-			<th>Points</th>
-			<th align="center">Description</th>
-			</tr>
-			<tr>	  
-			<td>5% (Youtube Video)</td>
-			<td align="left">
-				<ul><li>Did you upload a Youtube Video and test out opening it incognito mode so we could also access it?</li>
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-<table>
-  <tbody>
-    <tr>
-      <th>Points</th>
-      <th align="center">Description</th>
-    </tr>
-     <tr>
-	<td>10% (Team Assessment)</td>
-	<td align="left"><ul><li>Did you complete the assessment form which earns you 2%--the other 8% is determined by your team members responses</li><li>Note: In rare instances the instructor reserves the right to weigh the Team assessment more heavily. In the instance that a team member scores very low, the instructor will individually evaluate that students grade for the project.</li></ul></td>
-    </tr>	     
-  </tbody>
-</table>  
-
-
-<table>
-  <tbody>
-    <tr>
-      <th>Points</th>
-      <th align="center">Description</th>
-    </tr>
-     <tr>
-	<td>25% (Polish and completion)</td>
-	<td align="left"><ul><li>How polished are your materials(timeline, documentation, presentation)? Does your software work? Does it compile? Does it crash, segfault?</li></ul></td>
-    </tr>	     
-  </tbody>
-</table>  
-
-<table>
-  <tbody>
-    <tr>
-      <th>Points</th>
-      <th align="center">Description</th>
-    </tr>	     
-      <td>10% (Feature of your choice)</td>
-	<td align="left"><ul><li>Does your feature work? Do you have at least 1 test case</li></ul></td> 
-    </tr>
-  </tbody>
-</table>
-
-<table>
-  <tbody>
-    <tr>
-      <th>Points</th>
-      <th align="center">Description</th>
-    </tr>	     
-      <td>20% (Networking)</td>
-	<td align="left"><ul><li>Does your networking work?</li></ul></td> 
-    </tr>
-  </tbody>
-</table>
-
-<table>
-  <tbody>
-    <tr>
-      <th>Points</th>
-      <th align="center">Description</th>
-    </tr>	     
-      <td>10% (Testing)</td>
-	<td align="left"><ul><li>Do you have at least 8 unit test cases? Are they properly integrated with a Github Action?</li></ul></td> 
-    </tr>
-  </tbody>
-</table>
-
-**Note** To be 100% clear, every team member gets the same grade with the exception of the peer assessment.
+*_We initially wanted to use GTKD for a better user interface, but had difficulties implementing this as all of our group members were using mac silicon. We decided to use SDL itself to create the GUI, but ended up with a very simplistic GUI because to difficulties displaying images or text in SDL due to deprecated libraries_*
